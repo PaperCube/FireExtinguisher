@@ -1,4 +1,5 @@
 #include "detector.h"
+#include "motor_controller.h"
 #include "sout.h"
 
 using namespace serial;
@@ -11,21 +12,7 @@ void set_all(int v) {
     }
 }
 
-void setup() { 
-    const int pwm = 50;
-
-    for (int i = 2; i <= 5; i++) {
-        pinMode(i, OUTPUT);
-    }
-
-    while (true) {
-        for (int i = 50; i <= 150; i++) {
-            set_all(i > 100 ? 200 - i : i);
-            delay(60);
-        }
-    }
-
-    return;
+void setup() {
     sout.init();
     sdebug << "Initializing..." << endl;
     det.setup();
