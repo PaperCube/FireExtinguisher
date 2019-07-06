@@ -13,7 +13,7 @@ const color white = {255, 255, 255};
 const color black = {0, 0, 0};
 
 int last_update_time = 0;
-int update_interval = 200;
+int update_interval = 500;
 
 bool try_update_time() {
     int current = millis();
