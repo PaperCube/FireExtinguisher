@@ -3,11 +3,13 @@
 
 #include "definitions.h"
 
+extern direction reverse_direction(direction);
+
 struct motor_controller {
   public:
     int pwm_pin;
     int direction_pin;
-    int max_speed = 150;
+    int max_speed = 0;
 
     motor_controller();
     void init(int, int);
@@ -67,6 +69,8 @@ struct quad_directional {
     void set_direction(direction);
     void go();
     void go(int);
+    void reverse_and_stop(int);
+    void reverse_and_stop(int, int);
 };
 
 struct arm {
@@ -80,4 +84,4 @@ struct arm {
     void rotate_to(int);
 };
 
-#endif MOTOR_CONTROLLER_H
+#endif

@@ -6,6 +6,13 @@
 using serial::endl;
 using serial::sdebug;
 
+direction reverse_direction(direction d) {
+    static const direction rev_directions[] = {
+        direction::BACKWARD, direction::RIGHTWARD, direction::LEFTWARD,
+        direction::FORWARD};
+    return rev_directions[(int)d];
+}
+
 motor_controller::motor_controller() {}
 
 void motor_controller::init(int _pwm_pin, int _direction_pin) {
@@ -20,19 +27,21 @@ void motor_controller::stop() {
 }
 
 void motor_controller::go(int speed) {
-    int new_speed     = (int)(max_speed / 100.0 * speed);
-    int new_speed_abs = abs(new_speed);
-    if (new_speed_abs > 255) {
-        new_speed_abs = 255;
-        new_speed     = math::copy_sign(new_speed, 255);
+    double new_speed_f     = max_speed / 100.0 * speed;
+    double new_speed_abs_f = math::absolute(new_speed_f); // prevent overflow
+    if (new_speed_abs_f > 255) {
+        new_speed_abs_f = 255;
+        new_speed_f     = math::copy_sign(new_speed_f, 255.0);
     }
-    bool backwards = new_speed < 0;
+    int  new_speed_abs = (int)new_speed_abs_f;
+    int  new_speed     = (int)new_speed_f;
+    bool backwards     = new_speed < 0;
     if (new_speed == 0) {
         stop();
         return;
     }
-    // sdebug << "motor_controller::go(int) value passed in :" << speed
-    //        << " new_speed = " << new_speed << endl;
+    sdebug << "motor_controller::go(int) value passed in :" << speed
+           << " new_speed = " << new_speed << endl;
     digitalWrite(direction_pin, backwards ? HIGH : LOW);
     analogWrite(pwm_pin, backwards ? (255 - new_speed_abs) : new_speed_abs);
 }
@@ -91,9 +100,9 @@ void quad_directional::stop() {
     pair_fb->stop();
 }
 
-void quad_directional::set_direction(direction d) { 
+void quad_directional::set_direction(direction d) {
     stop();
-    current_direction = d; 
+    current_direction = d;
     go(current_speed);
 }
 
@@ -103,16 +112,16 @@ void quad_directional::go(int v) {
     current_speed = v;
     int lr_manip = 0, fb_manip = 0;
     switch (current_direction) {
-    case FORWARD:
+    case direction::FORWARD:
         lr_manip = 1;
         break;
-    case BACKWARD:
+    case direction::BACKWARD:
         lr_manip = -1;
         break;
-    case RIGHTWARD:
+    case direction::RIGHTWARD:
         fb_manip = 1;
         break;
-    case LEFTWARD:
+    case direction::LEFTWARD:
         fb_manip = -1;
         break;
     }
@@ -120,4 +129,16 @@ void quad_directional::go(int v) {
     auto speed_fb = v * multiplier_fb * fb_manip;
     pair_lr->go(speed_lr);
     pair_fb->go(speed_fb);
+}
+
+void quad_directional::reverse_and_stop(int timeout_millis) {
+    reverse_and_stop(-100, timeout_millis);
+}
+
+void quad_directional::reverse_and_stop(int power, int timeout_millis) {
+    int orig_speed = this->current_speed;
+    go(-math::absolute(power));
+    delay(timeout_millis);
+    stop();
+    this->current_speed = orig_speed;
 }

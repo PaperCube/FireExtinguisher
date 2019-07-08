@@ -11,14 +11,11 @@ using namespace serial;
 
 const int MOTOR_L        = 3;
 const int MOTOR_R        = 4;
-const int FULL_SPEED     = 120;
-const int STOP_THRESHOLD = 40;
-const int SLOW_THRESHOLD = 80;
+const int FULL_SPEED     = 130;
+const int STOP_THRESHOLD = 60;
+const int SLOW_THRESHOLD = 90;
 
-robot::robot() {
-    this->is_setup    = false;
-    this->mot_pair_lr = false;
-}
+robot::robot() { this->is_setup = false; }
 
 void robot::setup() {
     sdebug << "Preparing" << endl;
@@ -47,16 +44,20 @@ void robot::setup() {
     mot_pair_lr = new motor_pair(motor_l, motor_r);
     mot_pair_fb = new motor_pair(motor_f, motor_b);
 
-    motor_group =
-        new quad_directional(mot_pair_lr, FORWARD, mot_pair_fb, RIGHTWARD);
+    motor_group = new quad_directional(mot_pair_lr, direction::FORWARD,
+                                       mot_pair_fb, direction::RIGHTWARD);
 
+    // motor_group->set_direction(direction::FORWARD);
+    // motor_group->go();
+    // while(true);
     display::reset();
     display::update_display();
     sdebug << "Updating display" << endl;
     this->is_setup = true;
 }
 
-void robot::move_until_blocked(direction d, int timeout = 100) {
+void robot::move_until_blocked(direction d, const int timeout = 0) {
+    button b(3);
     motor_group->set_direction(d);
     prox_sensor *sensor = prox_sensor::sensor_at(d);
     motor_group->go();
@@ -70,22 +71,24 @@ void robot::move_until_blocked(direction d, int timeout = 100) {
         int val_converted               = sensor->read();
         display::sensor_value           = 0; // todo remove.
         display::sensor_value_converted = val_converted;
-        display::update_display();
+        // display::update_display();
         // sdebug << "Sensor : " << sensor_value << " | converting to "
         //        << convert(sensor_value) << endl;
 
         if (val_converted < STOP_THRESHOLD) {
-            if (last_stopping_request_time == 0) {
+            if (last_stopping_request_time == 0 && timeout > 0) {
                 last_stopping_request_time = millis();
-            } else if (millis() - last_stopping_request_time > timeout) {
-                mot_pair_lr->stop();
+            } else if (timeout <= 0 ||
+                       (long)(millis() - last_stopping_request_time) >
+                           timeout) {
+                motor_group->reverse_and_stop(32767, 200);
                 break;
             }
         } else {
             if (val_converted < SLOW_THRESHOLD) {
-                mot_pair_lr->go(40);
+                motor_group->go(70);
             } else {
-                mot_pair_lr->go();
+                motor_group->go();
             }
             last_stopping_request_time = 0;
         }
@@ -98,7 +101,7 @@ void debug_prox_sensor() {
             if (i != 0) {
                 sdebug << ", ";
             }
-            sdebug << prox_sensor::sensor_at(i)->read();
+            sdebug << prox_sensor::sensor_at((direction)i)->read();
         }
         sdebug << endl;
         delay(100);
@@ -108,12 +111,18 @@ void debug_prox_sensor() {
 void robot::run() {
     if (!is_setup)
         return;
+    button btn(2);
+    while (true) {
+        btn.wait_until_released();
+        move_until_blocked(direction::FORWARD);
+    }
     debug_prox_sensor();
     motor_group->go();
-    const direction directions[] = {FORWARD, RIGHTWARD, BACKWARD, LEFTWARD};
+    const direction directions[] = {direction::FORWARD, direction::RIGHTWARD,
+                                    direction::BACKWARD, direction::LEFTWARD};
     while (true) {
         for (auto d : directions) {
-            sdebug << "Travelling to direction " << d << endl;
+            sdebug << "Travelling to direction " << (int)d << endl;
             motor_group->set_direction(d);
             delay(1000);
             motor_group->stop();

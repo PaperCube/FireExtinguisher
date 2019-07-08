@@ -3,17 +3,16 @@
 
 namespace math {
 
-template <class T>
-T absolute(T value) {
-    if (value < 0) return -value;
+template <class T> T absolute(T value) {
+    if (value < 0)
+        return -value;
     return value;
 }
 
-template <class T>
-T copy_sign(T sign, T value) {
-    return sign < 0 ? -abs(value) : abs(value);
+template <class T> T copy_sign(T sign, T value) {
+    return sign < 0 ? -absolute(value) : absolute(value);
 }
 
-}  // namespace math
+} // namespace math
 
 #endif

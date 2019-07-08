@@ -4,8 +4,8 @@
 
 const int NATURAL_CONSTANT = 2.71828;
 
-static const int    prox_sensor::builtin_prox_sensor_pins[4] = {A1, A3, A4, A2};
-static prox_sensor *prox_sensor::prox_sensors[4]             = {nullptr};
+const int    prox_sensor::builtin_prox_sensor_pins[4] = {A1, A3, A4, A2};
+prox_sensor *prox_sensor::prox_sensors[4]             = {nullptr};
 
 int prox_sensor::convert(int value) {
     return 148.6 * pow(NATURAL_CONSTANT, -0.005 * value);
@@ -28,7 +28,7 @@ prox_sensor::prox_sensor(int pin_id) { pin = pin_id; }
 
 bool are_builtin_sensors_setup = false;
 
-static void prox_sensor::prepare_builtin_sensors() {
+void prox_sensor::prepare_builtin_sensors() {
     if (are_builtin_sensors_setup)
         return;
     are_builtin_sensors_setup = true;
@@ -37,6 +37,6 @@ static void prox_sensor::prepare_builtin_sensors() {
     }
 }
 
-static prox_sensor *prox_sensor::sensor_at(direction d) {
-    return prox_sensors[d];
+prox_sensor *prox_sensor::sensor_at(direction d) {
+    return prox_sensors[(int)d];
 }

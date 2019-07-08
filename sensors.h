@@ -12,9 +12,9 @@ class prox_sensor {
 
   public:
     prox_sensor(int);
-    read_raw();
-    read_raw_calibrated();
-    read();
+    int read_raw();
+    int read_raw_calibrated();
+    int read();
 
     static prox_sensor *sensor_at(direction);
 
