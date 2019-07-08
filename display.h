@@ -12,7 +12,7 @@ extern int sensor_value;
 extern int sensor_value_converted;
 
 struct color {
-    char r, g, b;
+    unsigned char r, g, b;
 };
 
 extern const color white;

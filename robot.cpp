@@ -2,34 +2,18 @@
 #include "buttons.h"
 #include "controllers.h"
 #include "display.h"
+#include "sensors.h"
 #include "sout.h"
 #include <Arduino.h>
 #include <Servo.h>
 
 using namespace serial;
 
-const int PORT_PROX_SENSOR = A2;
-const int MOTOR_L          = 3;
-const int MOTOR_R          = 4;
-const int FULL_SPEED       = 120;
-const int NATURAL_CONSTANT = 2.71828;
-const int STOP_THRESHOLD   = 40;
-const int SLOW_THRESHOLD   = 75;
-
-int convert(int value) { return 148.6 * pow(NATURAL_CONSTANT, -0.005 * value); }
-
-int robot::read_sensor_raw() { return analogRead(PORT_PROX_SENSOR); }
-
-int robot::read_sensor_raw_calibrated() {
-    const int REPEAT_CNT = 200;
-    double    sum        = 0;
-    for (int i = 0; i < REPEAT_CNT; i++) {
-        sum += read_sensor_raw();
-    }
-    return (int)(sum / REPEAT_CNT);
-}
-
-int robot::read_sensor() { return convert(read_sensor_raw_calibrated()); }
+const int MOTOR_L        = 3;
+const int MOTOR_R        = 4;
+const int FULL_SPEED     = 120;
+const int STOP_THRESHOLD = 40;
+const int SLOW_THRESHOLD = 80;
 
 robot::robot() {
     this->is_setup    = false;
@@ -37,6 +21,8 @@ robot::robot() {
 }
 
 void robot::setup() {
+    sdebug << "Preparing" << endl;
+    prox_sensor::prepare_builtin_sensors();
     button b(1);
     b.wait_until_released();
     sdebug << "Received singal: key 1 released" << endl;
@@ -60,7 +46,7 @@ void robot::setup() {
 
     mot_pair_lr = new motor_pair(motor_l, motor_r);
     mot_pair_fb = new motor_pair(motor_f, motor_b);
-    
+
     motor_group =
         new quad_directional(mot_pair_lr, FORWARD, mot_pair_fb, RIGHTWARD);
 
@@ -70,8 +56,10 @@ void robot::setup() {
     this->is_setup = true;
 }
 
-void robot::move_until_blocked(direction d, int timeout) {
-    mot_pair_lr->go();
+void robot::move_until_blocked(direction d, int timeout = 100) {
+    motor_group->set_direction(d);
+    prox_sensor *sensor = prox_sensor::sensor_at(d);
+    motor_group->go();
     int           last_loop_time_stamp       = 0;
     unsigned long last_stopping_request_time = 0;
     while (true) {
@@ -79,9 +67,8 @@ void robot::move_until_blocked(direction d, int timeout) {
         sdebug << "Last loop took "
                << (current_time_stamp - last_loop_time_stamp) << " ms." << endl;
         last_loop_time_stamp            = current_time_stamp;
-        int sensor_value                = read_sensor_raw_calibrated();
-        int val_converted               = convert(sensor_value);
-        display::sensor_value           = sensor_value;
+        int val_converted               = sensor->read();
+        display::sensor_value           = 0; // todo remove.
         display::sensor_value_converted = val_converted;
         display::update_display();
         // sdebug << "Sensor : " << sensor_value << " | converting to "
@@ -105,9 +92,23 @@ void robot::move_until_blocked(direction d, int timeout) {
     }
 }
 
+void debug_prox_sensor() {
+    while (true) {
+        for (int i = 0; i < 4; i++) {
+            if (i != 0) {
+                sdebug << ", ";
+            }
+            sdebug << prox_sensor::sensor_at(i)->read();
+        }
+        sdebug << endl;
+        delay(100);
+    }
+}
+
 void robot::run() {
     if (!is_setup)
         return;
+    debug_prox_sensor();
     motor_group->go();
     const direction directions[] = {FORWARD, RIGHTWARD, BACKWARD, LEFTWARD};
     while (true) {
@@ -115,7 +116,18 @@ void robot::run() {
             sdebug << "Travelling to direction " << d << endl;
             motor_group->set_direction(d);
             delay(1000);
+            motor_group->stop();
+            delay(200);
         }
     }
     delay(100000);
 }
+
+arm::arm(int pin_id) : pin(pin_id) { current_angle = 0; }
+
+void arm::rotate_to(int angle) {
+    current_angle = angle;
+    // todo communicate with hardware
+}
+
+void arm::rotate_by(int rel) { rotate_to(current_angle + rel); }
