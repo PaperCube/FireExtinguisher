@@ -53,13 +53,13 @@ motor_pair::motor_pair(motor_controller *motor_l, motor_controller *motor_r) {
 }
 
 void motor_pair::stop() {
+    current_speed = 0;
     left->stop();
     right->stop();
 }
 
 void motor_pair::go() {
-    left->go();
-    right->go();
+    go(100);
 }
 
 void motor_pair::go(int v) {
@@ -98,12 +98,14 @@ quad_directional::quad_directional(motor_pair *lr_motor_pair,
 void quad_directional::stop() {
     pair_lr->stop();
     pair_fb->stop();
+    this->current_speed = 0;
 }
 
 void quad_directional::set_direction(direction d) {
+    int original_speed = current_speed;
     stop();
     current_direction = d;
-    go(current_speed);
+    go(original_speed);
 }
 
 void quad_directional::go() { go(100); }
@@ -136,9 +138,7 @@ void quad_directional::reverse_and_stop(int timeout_millis) {
 }
 
 void quad_directional::reverse_and_stop(int power, int timeout_millis) {
-    int orig_speed = this->current_speed;
     go(-math::absolute(power));
     delay(timeout_millis);
     stop();
-    this->current_speed = orig_speed;
 }
