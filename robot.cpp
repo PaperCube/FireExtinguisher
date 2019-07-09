@@ -3,6 +3,7 @@
 #include "buzzer.h"
 #include "controllers.h"
 #include "display.h"
+#include "math_util.h"
 #include "sensors.h"
 #include "sout.h"
 #include <Arduino.h>
@@ -13,8 +14,8 @@ using namespace serial;
 const int MOTOR_L        = 3;
 const int MOTOR_R        = 4;
 const int FULL_SPEED     = 130;
-const int STOP_THRESHOLD = 60;
-const int SLOW_THRESHOLD = 90;
+const int STOP_THRESHOLD = 55;
+const int SLOW_THRESHOLD = 115;
 
 robot::robot() { this->is_setup = false; }
 
@@ -25,6 +26,7 @@ void robot::setup() {
     buzzer buz;
     buz.buzz(buzz_patterns::DOUBLE_SHORT);
     button b(1);
+    sdebug << "Done preparing" << endl;
     b.wait_until_released();
     sdebug << "Received singal: key 1 released" << endl;
     // motor_controller *motor = new motor_controller;
@@ -60,43 +62,60 @@ void robot::setup() {
     this->is_setup = true;
 }
 
+void print_visually(int v) {
+    const int gap_size = 6;
+    int       n        = math::round_d((double)v / gap_size);
+    for (int i = 0; i < n; i++) {
+        sdebug << "#";
+    }
+    sdebug << "  " << v << endl;
+}
+
 void robot::move_until_blocked(direction d, const int timeout = 0) {
     button b(3);
     motor_group->set_direction(d);
     prox_sensor *sensor = prox_sensor::sensor_at(d);
     motor_group->go();
-    int           last_loop_time_stamp       = 0;
-    unsigned long last_stopping_request_time = 0;
+    int            last_loop_time_stamp       = millis();
+    unsigned long  last_stopping_request_time = 0;
+    math::averager avger;
     while (true) {
-        unsigned long current_time_stamp = millis();
-        sdebug << "Last loop took "
-               << (current_time_stamp - last_loop_time_stamp) << " ms." << endl;
-        last_loop_time_stamp            = current_time_stamp;
-        int val_converted               = sensor->read();
-        display::sensor_value           = 0; // todo remove.
-        display::sensor_value_converted = val_converted;
-        // display::update_display();
+        int val_converted = sensor->read();
         // sdebug << "Sensor : " << sensor_value << " | converting to "
         //        << convert(sensor_value) << endl;
-
+        sdebug << "Sensor(conv): ";
+        print_visually(val_converted);
         if (val_converted < STOP_THRESHOLD) {
             if (last_stopping_request_time == 0 && timeout > 0) {
                 last_stopping_request_time = millis();
             } else if (timeout <= 0 ||
                        (long)(millis() - last_stopping_request_time) >
                            timeout) {
-                motor_group->reverse_and_stop(32767, 200);
+                sdebug << "Attempting to stop" << endl;
+                motor_group->reverse_and_stop(32767, 100);
                 break;
             }
         } else {
             if (val_converted < SLOW_THRESHOLD) {
-                motor_group->go(70);
+                int       window_size = SLOW_THRESHOLD - STOP_THRESHOLD;
+                int       dist        = val_converted - STOP_THRESHOLD;
+                const int lowest      = 50;
+                int       speed =
+                    lowest + ((double)dist / window_size) * (100 - lowest);
+                motor_group->go(speed);
             } else {
                 motor_group->go();
             }
             last_stopping_request_time = 0;
         }
+
+        unsigned long current_time_stamp = millis();
+        avger.update(current_time_stamp - last_loop_time_stamp);
+        last_loop_time_stamp = current_time_stamp;
     }
+    display::params.loop_avg = avger.get_avg();
+    display::update_display();
+    sdebug << "Quiting loop." << endl;
 }
 
 void debug_prox_sensor() {

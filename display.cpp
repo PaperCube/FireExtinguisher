@@ -5,15 +5,15 @@
 namespace display {
 
 typedef const unsigned char FontByte;
-UTFT LCD(QD_TFT180A, 51, 52, 32, 34, 33);
-int sensor_value = 0;
-int sensor_value_converted = 0;
+UTFT                        LCD(QD_TFT180A, 51, 52, 32, 34, 33);
+
+param_container params;
 
 const color white = {255, 255, 255};
 const color black = {0, 0, 0};
 
 int last_update_time = 0;
-int update_interval = 500;
+int update_interval  = 500;
 
 bool try_update_time() {
     int current = millis();
@@ -30,21 +30,20 @@ void update_display() {
     if (!try_update_time())
         return;
     set_color(black);
-    LCD.fillRect(105, 0, 141, 24);
+    LCD.fillRect(85, 0, 120, 12);
     set_color(white);
-    LCD.print(String(sensor_value), 105, 0);
-    LCD.print(String(sensor_value_converted), 105, 12);
+    LCD.print(String(params.loop_avg), 85, 0);
 }
 
 void init_sensor_monitor() {
-    LCD.print(String("sensor_val = "), 0, 0);
-    LCD.print(String("calibrated = "), 0, 12);
+    LCD.print(String("loop_avg = "), 0, 0);
+    LCD.print(String("0123456789abcdefghijklmnopqrst"), 0, 60);
 }
 
 void reset() {
     LCD.InitLCD(LANDSCAPE);
     LCD.clrScr();
-    LCD.setFont(SmallFont);
+    LCD.setFont(const_cast<unsigned char *>(SmallFont));
     LCD.setColor(255, 255, 255);
     last_update_time = millis();
     init_sensor_monitor();

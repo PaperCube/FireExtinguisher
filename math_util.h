@@ -13,6 +13,18 @@ template <class T> T copy_sign(T sign, T value) {
     return sign < 0 ? -absolute(value) : absolute(value);
 }
 
+double round_d(double value);
+
+class averager {
+    int  cnt;
+    long sum;
+
+  public:
+    averager();
+    void   update(int v);
+    double get_avg();
+};
+
 } // namespace math
 
 #endif

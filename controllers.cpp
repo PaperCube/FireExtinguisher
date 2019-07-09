@@ -40,8 +40,8 @@ void motor_controller::go(int speed) {
         stop();
         return;
     }
-    sdebug << "motor_controller::go(int) value passed in :" << speed
-           << " new_speed = " << new_speed << endl;
+    // sdebug << "motor_controller::go(int) value passed in :" << speed
+    //        << " new_speed = " << new_speed << endl;
     digitalWrite(direction_pin, backwards ? HIGH : LOW);
     analogWrite(pwm_pin, backwards ? (255 - new_speed_abs) : new_speed_abs);
 }
