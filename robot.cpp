@@ -1,5 +1,6 @@
 #include "robot.h"
 #include "buttons.h"
+#include "buzzer.h"
 #include "controllers.h"
 #include "display.h"
 #include "sensors.h"
@@ -20,6 +21,9 @@ robot::robot() { this->is_setup = false; }
 void robot::setup() {
     sdebug << "Preparing" << endl;
     prox_sensor::prepare_builtin_sensors();
+    buzz_patterns::prepare();
+    buzzer buz;
+    buz.buzz(buzz_patterns::DOUBLE_SHORT);
     button b(1);
     b.wait_until_released();
     sdebug << "Received singal: key 1 released" << endl;

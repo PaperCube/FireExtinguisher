@@ -6,7 +6,7 @@
 
 namespace serial
 {
-static bool hasBegun = false;
+// static bool hasBegun = false;
 class SerialOut
 {
   private:
