@@ -42,10 +42,7 @@ void robot::setup() {
     motor_f->init(5, 29);
     motor_b->init(4, 28);
 
-    motor_controller *const motors[] = {motor_l, motor_r, motor_f, motor_b};
-    for (auto iter = motors; iter != motors + 4; iter++) {
-        (*iter)->max_speed = FULL_SPEED;
-    }
+    set_max_speed(FULL_SPEED);
 
     mot_pair_lr = new motor_pair(motor_l, motor_r);
     mot_pair_fb = new motor_pair(motor_f, motor_b);
@@ -69,6 +66,13 @@ void print_visually(int v) {
         sdebug << "#";
     }
     sdebug << "  " << v << endl;
+}
+
+void robot::set_max_speed(int v) {
+    motor_controller *const motors[] = {motor_l, motor_r, motor_f, motor_b};
+    for (auto iter = motors; iter != motors + 4; iter++) {
+        (*iter)->max_speed = v;
+    }
 }
 
 void robot::move_until_blocked(direction d, const int timeout = 0) {

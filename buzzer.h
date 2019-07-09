@@ -17,6 +17,7 @@ class buzz_pattern {
 };
 
 namespace buzz_patterns {
+extern bool         is_prepared;
 extern buzz_pattern DOUBLE_SHORT;
 extern buzz_pattern SHORT;
 extern buzz_pattern LONG;

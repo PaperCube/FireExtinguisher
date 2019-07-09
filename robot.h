@@ -13,12 +13,13 @@ struct robot {
     
     motor_controller *motor_l, *motor_r, *motor_f, *motor_b;
     motor_pair *mot_pair_lr, *mot_pair_fb;
-    quad_directional *motor_group;
     Servo *arm;
 
    public:
-    robot();
+    quad_directional *motor_group;
     
+    robot();
+    void set_max_speed(int);
     void setup();
     void run();
     void move_until_blocked(direction, int);

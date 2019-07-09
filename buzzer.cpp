@@ -8,12 +8,15 @@ using namespace serial;
 buzz_pattern::buzz_pattern() {}
 
 namespace buzz_patterns {
+bool is_prepared = false;
 buzz_pattern DOUBLE_SHORT;
 buzz_pattern SHORT;
 buzz_pattern LONG;
 buzz_pattern DOUBLE_LONG;
 
 void prepare() {
+    if(is_prepared) return;
+    is_prepared = true;
     DOUBLE_SHORT.set({100, 100, 100});
     DOUBLE_LONG.set({1000, 500, 1000});
     LONG.set({1000});
