@@ -22,7 +22,7 @@ struct robot {
     void set_max_speed(int);
     void setup();
     void run();
-    void move_until_blocked(direction, int);
+    void move_until_blocked(direction, int = 0);
 };
 
 #endif
