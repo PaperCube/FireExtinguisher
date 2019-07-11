@@ -52,12 +52,10 @@ motors->go(1000);
 ## **传感器**
 通过`prox_sensor::sensor_at(direction v)`函数获得一个指向面向方向v的传感器对象的指针。例如：
 ```cpp
-prox_sensor::prepare_built_in_sensors();
 prox_sensor *p = prox_sensor::sensor_at(direction::FORWARD);
 int value = p->read(); //将传感器的值读入value
 ```
-调用`sensor_at`函数之前 **_必须_** 调用`prox_sensor::prepare_built_in_sensors();`，它可以安全的被调用多次。
-要获得一个合适的值，你应该多次测试它读出的值。
+不同的传感器或者同一个传感器在不同条件下会读出的值不尽相同。要获得一个合适的阈值，建议进行多次测试，选出一个最合适的值。
 
 
 # 示例 - 四方向自动避障机器人
@@ -124,4 +122,4 @@ void move_until_blocked(direction d){
 ```
 只需要把`loop`函数中的`r.move_until_blocked(d)` 换成 `move_until_blocked(d)`，并且把它放在 `void setup(){...`之前就可以了。
 
-这么做简单明朗。然而如果你观察robot::move_until_blocked的定义，你会发现还是少了一些东西。你可以试着找出缺少了什么，并且描述一下这些缺少的部分起到了什么样的功能。
+这么做简单明朗。然而如果你观察`robot::move_until_blocked`的定义，你会发现还是少了一些东西。你可以试着找出缺少了什么，并且描述一下这些缺少的部分起到了什么样的功能。

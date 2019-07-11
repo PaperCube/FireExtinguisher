@@ -21,7 +21,6 @@ robot::robot() { this->is_setup = false; }
 
 void robot::setup() {
     sdebug << "Preparing" << endl;
-    prox_sensor::prepare_builtin_sensors();
     buzz_patterns::prepare();
     buzzer buz;
     buz.buzz(buzz_patterns::DOUBLE_SHORT);
@@ -75,7 +74,7 @@ void robot::set_max_speed(int v) {
     }
 }
 
-void robot::move_until_blocked(direction d, const int timeout = 0) {
+void robot::move_until_blocked(direction d, const int timeout) {
     button b(3);
     motor_group->set_direction(d);
     prox_sensor *sensor = prox_sensor::sensor_at(d);

@@ -9,7 +9,7 @@ class prox_sensor {
     int                 convert(int);
     static const int    builtin_prox_sensor_pins[4];
     static prox_sensor *prox_sensors[4];
-
+    static void prepare_builtin_sensors();
   public:
     prox_sensor(int);
     int read_raw();
@@ -17,7 +17,5 @@ class prox_sensor {
     int read();
 
     static prox_sensor *sensor_at(direction);
-
-    static void prepare_builtin_sensors();
 };
 #endif

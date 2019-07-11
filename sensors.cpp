@@ -38,5 +38,6 @@ void prox_sensor::prepare_builtin_sensors() {
 }
 
 prox_sensor *prox_sensor::sensor_at(direction d) {
+    prepare_builtin_sensors();
     return prox_sensors[(int)d];
 }
