@@ -39,7 +39,7 @@ void buzzer::buzz(int timeout) {
 }
 
 void buzzer::buzz(buzz_pattern &pattern) {
-    prepare();
+    buzz_patterns::prepare();
     for (int i = 0; i < pattern.length; i++) {
         if ((i & 1) == 0) {
             buzz(pattern.pattern[i]);
