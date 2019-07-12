@@ -12,6 +12,7 @@ struct motor_controller {
     int max_speed = 0;
 
     motor_controller();
+    motor_controller(int, int);
     void init(int, int);
     void stop();
     void go(int speed);

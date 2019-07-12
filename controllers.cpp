@@ -15,6 +15,10 @@ direction reverse_direction(direction d) {
 
 motor_controller::motor_controller() {}
 
+motor_controller::motor_controller(int _pwm_pin, int _direction_pin): motor_controller(){
+    init(_pwm_pin, _direction_pin);
+}
+
 void motor_controller::init(int _pwm_pin, int _direction_pin) {
     pinMode(_direction_pin, OUTPUT);
     pwm_pin       = _pwm_pin;
