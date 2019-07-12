@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "sensors.h"
+#include "sout.h"
 
 const int NATURAL_CONSTANT = 2.71828;
 
@@ -41,3 +42,51 @@ prox_sensor *prox_sensor::sensor_at(direction d) {
     prepare_builtin_sensors();
     return prox_sensors[(int)d];
 }
+
+namespace sensor_debugging {
+
+int read(int pin) {
+    const int rep = 100;
+    long      sum = 0;
+    for (int i = 0; i < rep; i++) {
+        sum += analogRead(pin);
+    }
+    return sum / rep;
+}
+
+void fill(char *buf, int value, int len) {
+    static char locbuf[64];
+    int         pos = 0;
+    if (value == 0) {
+        locbuf[0] = '0';
+        pos++;
+    }
+    while (value != 0) {
+        locbuf[pos++] = '0' + value % 10;
+        value /= 10;
+    }
+    const int num_len     = pos;
+    const int filler_size = len - num_len;
+    for (int i = 0; i < filler_size; i++) {
+        buf[i] = ' ';
+    }
+    for (int i = 0; i < num_len; i++) {
+        buf[filler_size + i] = locbuf[num_len - 1 - i];
+    }
+    buf[len] = 0;
+}
+
+void debug_show_values() {
+    using namespace serial;
+    while (true) {
+        char buf[64];
+        for (int i = 1; i <= 8; i++) {
+            sensor_debugging::fill(buf, sensor_debugging::read(i), 5);
+            sdebug << String(buf) << "|";
+        }
+        sdebug << endl;
+        delay(200);
+    }
+}
+
+} // namespace sensor_debugging
