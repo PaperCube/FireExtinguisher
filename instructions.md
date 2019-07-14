@@ -36,8 +36,13 @@ motors->set_direction(direction::FORWARD);
 motors->go();
 delay(1000);
 motors->stop();
-motors->go(1000);
+delay(1000);
+motors->go(50);
 ```
+如果你在`void setup()`中运行上面这段代码，你将发现机器人有如下动作：  
+* 机器人向前行进1秒
+* 机器人停止1秒
+* 机器人以原来速度的一半（大约一半）运行下去，并且不停止。
 ### `quad_directional::stop()`函数
 使之立即停止。
 
