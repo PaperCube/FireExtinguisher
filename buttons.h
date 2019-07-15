@@ -6,11 +6,8 @@ class button {
     int pin_id;
     int button_id;
    public:
-    button(int button) {
-        pin_id = 21 + button;
-        button_id = button;
-    }
-
+    button(int);
+    void set_hold_timeout(long v);
     bool is_pressed();
     void wait_until_released();
 };
