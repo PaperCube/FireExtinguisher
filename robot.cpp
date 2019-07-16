@@ -19,15 +19,9 @@ const int SLOW_THRESHOLD = 115;
 
 robot::robot() { this->is_setup = false; }
 
-void robot::setup() {
-    sdebug << "Preparing" << endl;
-    buzz_patterns::prepare();
-    buzzer buz;
-    buz.buzz(buzz_patterns::DOUBLE_SHORT);
-    button b(1);
-    sdebug << "Done preparing" << endl;
-    b.wait_until_released();
-    sdebug << "Received singal: key 1 released" << endl;
+void robot::init_sensors() { sensor_manager::instance.prepare(); }
+
+void robot::init_motors() {
     // motor_controller *motor = new motor_controller;
     // motor->init(3, 27);
     // motor->max_speed = 100;
@@ -52,6 +46,18 @@ void robot::setup() {
     // motor_group->set_direction(direction::FORWARD);
     // motor_group->go();
     // while(true);
+}
+
+void robot::setup() {
+    sdebug << "Preparing" << endl;
+    buzz_patterns::prepare();
+    buzzer buz;
+    buz.buzz(buzz_patterns::DOUBLE_SHORT);
+    button b(1);
+    sdebug << "Done preparing" << endl;
+    b.wait_until_released();
+    sdebug << "Received singal: key 1 released" << endl;
+
     display::reset();
     display::update_display();
     sdebug << "Updating display" << endl;
@@ -74,10 +80,17 @@ void robot::set_max_speed(int v) {
     }
 }
 
+void robot::set_max_speed(int vf, int vl, int vr, int vb) {
+    motor_f->max_speed = vf;
+    motor_l->max_speed = vl;
+    motor_r->max_speed = vr;
+    motor_b->max_speed = vb;
+}
+
 void robot::move_until_blocked(direction d, const int timeout) {
     button b(3);
     motor_group->set_direction(d);
-    prox_sensor *sensor = prox_sensor::sensor_at(d);
+    auto *sensor = sensor_manager::instance.sensor_at(d);
     motor_group->go();
     int            last_loop_time_stamp       = millis();
     unsigned long  last_stopping_request_time = 0;
@@ -127,7 +140,7 @@ void debug_prox_sensor() {
             if (i != 0) {
                 sdebug << ", ";
             }
-            sdebug << prox_sensor::sensor_at((direction)i)->read();
+            sdebug << sensor_manager::instance.sensor_at((direction)i)->read();
         }
         sdebug << endl;
         delay(100);
@@ -158,11 +171,28 @@ void robot::run() {
     delay(100000);
 }
 
-arm::arm(int pin_id) : pin(pin_id) { current_angle = 0; }
+void robot::stop() { motor_group->stop(); }
 
-void arm::rotate_to(int angle) {
-    current_angle = angle;
-    // todo communicate with hardware
+void robot::set_direction(direction d) { motor_group->set_direction(d); }
+
+void robot::go() { motor_group->go(); }
+
+void robot::go(int v) { motor_group->go(v); }
+
+void robot::reverse_and_stop(int v) { motor_group->reverse_and_stop(v); }
+
+void robot::reverse_and_stop(int v, int v2) {
+    motor_group->reverse_and_stop(v, v2);
 }
 
-void arm::rotate_by(int rel) { rotate_to(current_angle + rel); }
+int robot::read_sensor(direction d) {
+    return sensor_manager::instance.sensor_at(d)->read();
+}
+
+int robot::read_sensor(direction d, signed char which) {
+    auto *sensor = sensor_manager::instance.sensor_at(d);
+    if (which == 'l' || which == 'L' || which == -1) {
+        return sensor->read_l();
+    }
+    return sensor->read_r();
+}

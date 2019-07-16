@@ -146,3 +146,12 @@ void quad_directional::reverse_and_stop(int power, int timeout_millis) {
     delay(timeout_millis);
     stop();
 }
+
+arm::arm(int pin_id) : pin(pin_id) { current_angle = 0; }
+
+void arm::rotate_to(int angle) {
+    current_angle = angle;
+    // todo communicate with hardware
+}
+
+void arm::rotate_by(int rel) { rotate_to(current_angle + rel); }

@@ -27,8 +27,10 @@ v1指定机器人前进的方向，v2指定机器人到底在预定距离范围�
 ### `robot::set_max_speed(int v1)`
 用于设置机器人的全局最大速度。这个设置会覆盖掉你对每个电机单独设置的最大速度
 
-## **`quad_directional`对象**
-代表一个机器人的四个轮子/电机。你可以通过robot的motor_group来获得一个指向这个机器人的唯一`quad_directional`对象的指针。例如
+## 通过`robot`对象控制机器人行进
+```
+TODO UPDATE THIS SECTION
+```
 ```cpp
 robot r;
 quad_directional *motors = r.motor_group;
