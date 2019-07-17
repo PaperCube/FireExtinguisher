@@ -42,6 +42,8 @@ struct robot {
     int read_sensor(direction);
     int read_sensor(direction, signed char);
 
+    int read_sensor_raw(direction, signed char = 0);
+
     void start_arm();
     void stop_arm();
 };

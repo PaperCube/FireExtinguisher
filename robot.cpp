@@ -187,10 +187,20 @@ int robot::read_sensor(direction d) {
 
 int robot::read_sensor(direction d, signed char which) {
     auto *sensor = sensor_manager::instance.sensor_at(d);
-    if (which == 'l' || which == 'L' || which == -1) {
+    if (which < 0) {
         return sensor->read_l();
     }
     return sensor->read_r();
+}
+
+int robot::read_sensor_raw(direction d, signed char which) {
+    auto *sensor = sensor_manager::instance.sensor_at(d);
+    if(which == 0){
+        return sensor->read_raw();
+    } else if(which < 0){
+        return sensor->get_left()->read_raw_calibrated();
+    }
+    return sensor->get_right()->read_raw_calibrated();
 }
 
 void robot::start_arm() { mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED); }

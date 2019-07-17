@@ -24,6 +24,7 @@ class sensor_pair {
   public:
     sensor_pair(prox_sensor *sl, prox_sensor *sr);
     int          read();
+    int          read_raw();
     int          read_l();
     int          read_r();
     prox_sensor *get_left();
@@ -42,6 +43,6 @@ class sensor_manager {
     sensor_type *sensors[4];
     sensor_manager();
     sensor_type *sensor_at(direction);
-    void prepare();
+    void         prepare();
 };
 #endif

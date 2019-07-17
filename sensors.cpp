@@ -84,6 +84,12 @@ int sensor_pair::read() {
     return (vl + vr) / 2;
 }
 
+int sensor_pair::read_raw() {
+    int vl = get_left()->read_raw_calibrated();
+    int vr = get_right()->read_raw_calibrated();
+    return (vl + vr) / 2;
+}
+
 int sensor_pair::read_l() { return l->read(); }
 
 int sensor_pair::read_r() { return r->read(); }
@@ -94,9 +100,7 @@ prox_sensor *sensor_pair::get_right() { return r; }
 
 sensor_manager sensor_manager::instance;
 
-sensor_manager::sensor_manager() {
-    is_prepared = false;
-}
+sensor_manager::sensor_manager() { is_prepared = false; }
 
 sensor_manager::sensor_type *sensor_manager::sensor_at(direction d) {
     prepare();
@@ -109,8 +113,10 @@ void sensor_manager::prepare() {
     is_prepared                 = true;
     const int sensor_ordinals[] = {1, 8, 3, 2, 7, 6, 5, 4};
     for (int i = 0; i < 4; i++) {
-        prox_sensor *l = new prox_sensor(SENSOR_PINS[sensor_ordinals[i * 2] - 1]),
-                    *r = new prox_sensor(SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
-        sensors[i]     = new sensor_pair(l, r);
+        prox_sensor *l = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2] - 1]),
+                    *r = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
+        sensors[i] = new sensor_pair(l, r);
     }
 }

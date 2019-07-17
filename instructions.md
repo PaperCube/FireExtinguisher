@@ -28,41 +28,39 @@ v1指定机器人前进的方向，v2指定机器人到底在预定距离范围�
 用于设置机器人的全局最大速度。这个设置会覆盖掉你对每个电机单独设置的最大速度
 
 ## 通过`robot`对象控制机器人行进
-```
-TODO UPDATE THIS SECTION
-```
 ```cpp
 robot r;
-quad_directional *motors = r.motor_group;
-motors->set_direction(direction::FORWARD);
-motors->go();
+r.set_direction(direction::FORWARD);
+r.go();
 delay(1000);
-motors->stop();
+r.stop();
 delay(1000);
-motors->go(50);
+r.go(50);
 ```
 如果你在`void setup()`中运行上面这段代码，你将发现机器人有如下动作：  
 * 机器人向前行进1秒
 * 机器人停止1秒
 * 机器人以原来速度的一半（大约一半）运行下去，并且不停止。
-### `quad_directional::stop()`函数
+### `robot::stop()`函数
 使之立即停止。
 
-### `quad_directional::go([int v])`函数
+### `robot::go([int v])`函数
 使之以100的速度前进。如果不填参数，机器人会以速度100运行。速度的范围是0-100，可以超出这个范围。当填写100时其实际速度是每个电机定义的最大速度。其值请见`robot.cpp`中的`FULL_SPEED`。
 
 
-### `quad_directional::set_direction(direction v)`函数
+### `robot::set_direction(direction v)`函数
 设置机器人的前进方向。如果在机器人运行途中调用此函数，机器人会立刻更改方向。
 > 警告：机器人在高速运行时突然更改方向可能导致打滑/漂移。
 
 ## **传感器**
-通过`prox_sensor::sensor_at(direction v)`函数获得一个指向面向方向v的传感器对象的指针。例如：
+### `robot::read_sensor(direction v1, [signed char v2]`函数
+此函数可以读方向v1上的传感器的值。此函数也可以写第二个参数，用于指定从哪个传感器读取值。例如
 ```cpp
-prox_sensor *p = prox_sensor::sensor_at(direction::FORWARD);
-int value = p->read(); //将传感器的值读入value
+robot r;
+r.read_sensor(direction::FORWARD); // 综合考虑前方两个数值
+r.read_sensor(direction::LEFT, -1); // 读以前方左侧为编号1，逆时针依次编号，编号为3的传感器的数值
 ```
-不同的传感器或者同一个传感器在不同条件下会读出的值不尽相同。要获得一个合适的阈值，建议进行多次测试，选出一个最合适的值。
+这样读出的值是转换过的。你也可以调用`read_sensor_raw`来读出传感器的原始值。其参数和含义和`read_sensor`函数完全相同。
 
 ------------------------
 
@@ -131,10 +129,8 @@ for(int i = 0; i < 4; i++){
 ```cpp
 #include "robot_all.h"
 robot r;
-quad_directional *motors;
 void setup(){
     r.setup();
-    motors = r.motor_group;
     r.set_max_speed(120);
 }
 void loop(){
@@ -147,13 +143,12 @@ void loop(){
 然而你也可能想实现自己的`move_until_blocked`函数。那我们可以这么写：
 ```cpp
 void move_until_blocked(direction d){
-    motors->set_direction(d);
-    motors->go();
-    prox_sensor *sensor = prox_sensor::sensor_at(direction::FORWARD);
+    r.set_direction(d);
+    r.go();
      // 更改下面这个60来测试机器人到底在什么位置停止比较合适
-    while(sensor->read() > 60)
+    while(r.read_sensor(d) > 60)
         ; //不要忘记这个分号
-    motors->stop();
+    r.stop();
 }
 ```
 只需要把`loop`函数中的`r.move_until_blocked(d)` 换成 `move_until_blocked(d)`，并且把它放在 `void setup(){...`之前就可以了。
