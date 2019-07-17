@@ -6,6 +6,27 @@
 using serial::endl;
 using serial::sdebug;
 
+builtin_motor_driver::builtin_motor_driver(int port) {
+    if (port <= 0 || port > 6)
+        port = 1;
+    digital_l    = 38 + 2 * (6 - port);
+    digital_r    = digital_l + 1;
+    analog_pin   = 8 + (6 - port);
+    all_low_stop = true;
+}
+
+void builtin_motor_driver::go(int speed) {
+    if (speed == 0) {
+        digitalWrite(digital_l, all_low_stop ? LOW : HIGH);
+        digitalWrite(digital_r, all_low_stop ? HIGH : LOW);
+        analogWrite(analog_pin, 0);
+        return;
+    }
+    digitalWrite(digital_l, speed > 0 ? HIGH : LOW);
+    digitalWrite(digital_r, speed > 0 ? LOW : HIGH);
+    analogWrite(analog_pin, math::absolute(speed));
+}
+
 direction reverse_direction(direction d) {
     static const direction rev_directions[] = {
         direction::BACKWARD, direction::RIGHTWARD, direction::LEFTWARD,
@@ -15,7 +36,8 @@ direction reverse_direction(direction d) {
 
 motor_controller::motor_controller() {}
 
-motor_controller::motor_controller(int _pwm_pin, int _direction_pin): motor_controller(){
+motor_controller::motor_controller(int _pwm_pin, int _direction_pin)
+    : motor_controller() {
     init(_pwm_pin, _direction_pin);
 }
 
@@ -62,9 +84,7 @@ void motor_pair::stop() {
     right->stop();
 }
 
-void motor_pair::go() {
-    go(100);
-}
+void motor_pair::go() { go(100); }
 
 void motor_pair::go(int v) {
     current_speed = v;
@@ -146,3 +166,12 @@ void quad_directional::reverse_and_stop(int power, int timeout_millis) {
     delay(timeout_millis);
     stop();
 }
+
+arm::arm(int pin_id) : pin(pin_id) { current_angle = 0; }
+
+void arm::rotate_to(int angle) {
+    current_angle = angle;
+    // todo communicate with hardware
+}
+
+void arm::rotate_by(int rel) { rotate_to(current_angle + rel); }

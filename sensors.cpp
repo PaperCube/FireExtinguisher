@@ -1,15 +1,15 @@
 #include <Arduino.h>
 
+#include "parameters.h"
 #include "sensors.h"
 #include "sout.h"
 
 const int NATURAL_CONSTANT = 2.71828;
 
-const int    prox_sensor::builtin_prox_sensor_pins[4] = {A1, A3, A4, A2};
-prox_sensor *prox_sensor::prox_sensors[4]             = {nullptr};
-
 int prox_sensor::convert(int value) {
-    return 148.6 * pow(NATURAL_CONSTANT, -0.005 * value);
+    if (value == 0)
+        value = 1;
+    return 30000 / value;
 }
 
 int prox_sensor::read_raw() { return analogRead(pin); }
@@ -26,22 +26,6 @@ int prox_sensor::read_raw_calibrated() {
 }
 
 prox_sensor::prox_sensor(int pin_id) { pin = pin_id; }
-
-bool are_builtin_sensors_setup = false;
-
-void prox_sensor::prepare_builtin_sensors() {
-    if (are_builtin_sensors_setup)
-        return;
-    are_builtin_sensors_setup = true;
-    for (int i = 0; i < 4; i++) {
-        prox_sensors[i] = new prox_sensor(builtin_prox_sensor_pins[i]);
-    }
-}
-
-prox_sensor *prox_sensor::sensor_at(direction d) {
-    prepare_builtin_sensors();
-    return prox_sensors[(int)d];
-}
 
 namespace sensor_debugging {
 
@@ -90,3 +74,51 @@ void debug_show_values() {
 }
 
 } // namespace sensor_debugging
+
+sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
+    l = sl;
+    r = sr;
+}
+
+int sensor_pair::read() {
+    int vl = read_l();
+    int vr = read_r();
+    return (vl + vr) / 2;
+}
+
+int sensor_pair::read_raw() {
+    int vl = get_left()->read_raw_calibrated();
+    int vr = get_right()->read_raw_calibrated();
+    return (vl + vr) / 2;
+}
+
+int sensor_pair::read_l() { return l->read(); }
+
+int sensor_pair::read_r() { return r->read(); }
+
+prox_sensor *sensor_pair::get_left() { return l; }
+
+prox_sensor *sensor_pair::get_right() { return r; }
+
+sensor_manager sensor_manager::instance;
+
+sensor_manager::sensor_manager() { is_prepared = false; }
+
+sensor_manager::sensor_type *sensor_manager::sensor_at(direction d) {
+    prepare();
+    return this->sensors[(int)d];
+}
+
+void sensor_manager::prepare() {
+    if (is_prepared)
+        return;
+    is_prepared                 = true;
+    const int sensor_ordinals[] = {1, 8, 3, 2, 7, 6, 5, 4};
+    for (int i = 0; i < 4; i++) {
+        prox_sensor *l = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2] - 1]),
+                    *r = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
+        sensors[i] = new sensor_pair(l, r);
+    }
+}

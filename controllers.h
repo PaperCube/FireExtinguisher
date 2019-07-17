@@ -5,6 +5,15 @@
 
 extern direction reverse_direction(direction);
 
+struct builtin_motor_driver {
+  private:
+    int digital_l, digital_r, analog_pin;
+  public:
+    bool all_low_stop;
+    builtin_motor_driver(int);
+    void go(int);
+};
+
 struct motor_controller {
   public:
     int pwm_pin;
