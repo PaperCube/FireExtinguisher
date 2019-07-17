@@ -6,7 +6,6 @@
 
 namespace serial
 {
-// static bool hasBegun = false;
 class SerialOut
 {
   private:
@@ -48,9 +47,9 @@ class SerialOut
     void init(unsigned int rate = 9600);
 };
 
-static const String endl = "\n";
-static SerialOut sout;
-static SerialOut sdebug(true);
+const String endl = "\n";
+extern SerialOut sout;
+extern SerialOut sdebug;
 }
 
 #endif
