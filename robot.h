@@ -2,9 +2,9 @@
 #define ROBOT_H
 
 #include "controllers.h"
+#include "parameters.h"
 #include "sensors.h"
 #include <Arduino.h>
-#include <Servo.h>
 
 int convert(int);
 
@@ -12,10 +12,10 @@ struct robot {
   private:
     bool is_setup;
 
-    motor_controller *motor_l, *motor_r, *motor_f, *motor_b;
-    motor_pair *      mot_pair_lr, *mot_pair_fb;
-    sensor_pair *     sensor[4];
-    Servo *           arm;
+    motor_controller *   motor_l, *motor_r, *motor_f, *motor_b;
+    motor_pair *         mot_pair_lr, *mot_pair_fb;
+    sensor_pair *        sensor[4];
+    builtin_motor_driver mechanic_arm_motor;
 
     void init_sensors();
     void init_motors();
@@ -40,7 +40,10 @@ struct robot {
     /* End: delegate */
 
     int read_sensor(direction);
-    int read_sensor(direction, signed char)
+    int read_sensor(direction, signed char);
+
+    void start_arm();
+    void stop_arm();
 };
 
 #endif

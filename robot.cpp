@@ -11,13 +11,9 @@
 
 using namespace serial;
 
-const int MOTOR_L        = 3;
-const int MOTOR_R        = 4;
-const int FULL_SPEED     = 130;
-const int STOP_THRESHOLD = 55;
-const int SLOW_THRESHOLD = 115;
-
-robot::robot() { this->is_setup = false; }
+robot::robot() : mechanic_arm_motor(MECHANIC_ARM_MOTOR_ID) {
+    this->is_setup = false;
+}
 
 void robot::init_sensors() { sensor_manager::instance.prepare(); }
 
@@ -196,3 +192,7 @@ int robot::read_sensor(direction d, signed char which) {
     }
     return sensor->read_r();
 }
+
+void robot::start_arm() { mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED); }
+
+void robot::stop_arm() { mechanic_arm_motor.go(0); }

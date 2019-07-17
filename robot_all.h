@@ -8,6 +8,7 @@
 #include "definitions.h"
 #include "display.h"
 #include "math_util.h"
+#include "parameters.h"
 #include "robot.h"
 #include "sensors.h"
 #include "sout.h"
