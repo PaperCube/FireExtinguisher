@@ -7,7 +7,9 @@
 const int NATURAL_CONSTANT = 2.71828;
 
 int prox_sensor::convert(int value) {
-    return 148.6 * pow(NATURAL_CONSTANT, -0.005 * value);
+    if (value == 0)
+        value = 1;
+    return 30000 / value;
 }
 
 int prox_sensor::read_raw() { return analogRead(pin); }
