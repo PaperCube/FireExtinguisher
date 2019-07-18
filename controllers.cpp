@@ -64,10 +64,12 @@ void motor_controller::go(int speed) {
     bool backwards     = new_speed < 0;
     if (new_speed == 0) {
         stop();
+        // sdebug << "Stopping " << endl;
         return;
     }
     // sdebug << "motor_controller::go(int) value passed in :" << speed
     //        << " new_speed = " << new_speed << endl;
+    // sdebug << "direction: " << direction_pin << " pwm: " << pwm_pin << endl;
     digitalWrite(direction_pin, backwards ? HIGH : LOW);
     analogWrite(pwm_pin, backwards ? (255 - new_speed_abs) : new_speed_abs);
 }
@@ -135,6 +137,7 @@ void quad_directional::set_direction(direction d) {
 void quad_directional::go() { go(100); }
 
 void quad_directional::go(int v) {
+    sdebug << "quad_directional - going " << v << endl;
     current_speed = v;
     int lr_manip = 0, fb_manip = 0;
     switch (current_direction) {

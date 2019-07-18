@@ -45,23 +45,27 @@ void robot::init_motors() {
 }
 
 void robot::setup() {
+    if (this->is_setup)
+        return;
+    this->is_setup = true;
+    sout.init();
     sdebug << "Preparing" << endl;
     buzz_patterns::prepare();
     buzzer buz;
     buz.buzz(buzz_patterns::DOUBLE_SHORT);
-    button b(1);
     sdebug << "Done preparing" << endl;
-    b.wait_until_released();
     sdebug << "Received singal: key 1 released" << endl;
 
     display::reset();
     display::update_display();
     sdebug << "Updating display" << endl;
-    this->is_setup = true;
+
+    init_sensors();
+    init_motors();
 }
 
 void print_visually(int v) {
-    const int gap_size = 6;
+    const int gap_size = 600;
     int       n        = math::round_d((double)v / gap_size);
     for (int i = 0; i < n; i++) {
         sdebug << "#";
@@ -195,9 +199,9 @@ int robot::read_sensor(direction d, signed char which) {
 
 int robot::read_sensor_raw(direction d, signed char which) {
     auto *sensor = sensor_manager::instance.sensor_at(d);
-    if(which == 0){
+    if (which == 0) {
         return sensor->read_raw();
-    } else if(which < 0){
+    } else if (which < 0) {
         return sensor->get_left()->read_raw_calibrated();
     }
     return sensor->get_right()->read_raw_calibrated();
@@ -206,3 +210,8 @@ int robot::read_sensor_raw(direction d, signed char which) {
 void robot::start_arm() { mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED); }
 
 void robot::stop_arm() { mechanic_arm_motor.go(0); }
+
+void robot::__test(){
+    mot_pair_fb->go();
+    mot_pair_lr->go();
+}

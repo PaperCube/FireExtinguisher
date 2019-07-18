@@ -28,6 +28,7 @@ struct robot {
     void set_max_speed(int, int, int, int);
     void setup();
     void run();
+    void __test();
     void move_until_blocked(direction, int = 0);
 
     /* Begin: delegated by quad_directional *motor_group */
