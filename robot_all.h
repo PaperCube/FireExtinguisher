@@ -7,6 +7,7 @@
 #include "controllers.h"
 #include "definitions.h"
 #include "display.h"
+#include "light.h "
 #include "math_util.h"
 #include "parameters.h"
 #include "robot.h"
