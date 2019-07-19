@@ -2,12 +2,12 @@
 ## 万能头文件
 `robot_all.h`包含了所有你可能用到的**本类库的**头文件。
 ## 内置的方向
-有许多地方以一个特定的方向为参数。它有四个值，其书写方式和含义
+有许多地方以一个特定的方向为参数。它有四个值，其书写方式和含义以及等效的数值为：
 ```cpp
-direction::FORWARD      //向前
-direction::BACKWARD     //向后
-direction::LEFTWARD     //向左
-direction::RIGHTWARD    //向右
+direction::FORWARD      //向前  =0
+direction::LEFTWARD     //向左  =1
+direction::BACKWARD     //向后  =2
+direction::RIGHTWARD    //向右  =3
 ```
 如果提示找不到符号，请先`#include "definitions.h"`或使用万能头文件`"robot_all.h"`
 ## **文件`robot.h`**
