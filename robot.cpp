@@ -20,7 +20,7 @@ void robot::init_sensors() { sensor_manager::instance.prepare(); }
 void robot::init_motors() {
     // motor_controller *motor = new motor_controller;
     // motor->init(3, 27);
-    // motor->max_speed = 100;
+    // motor->max_power = 100;
     // motor->go();
     motor_l = new motor_controller;
     motor_r = new motor_controller;
@@ -31,7 +31,7 @@ void robot::init_motors() {
     motor_f->init(5, 29);
     motor_b->init(4, 28);
 
-    set_max_speed(FULL_SPEED);
+    set_max_power(FULL_SPEED);
 
     mot_pair_lr = new motor_pair(motor_l, motor_r);
     mot_pair_fb = new motor_pair(motor_f, motor_b);
@@ -73,18 +73,24 @@ void print_visually(int v) {
     sdebug << "  " << v << endl;
 }
 
-void robot::set_max_speed(int v) {
+void robot::set_max_speed(int v) { set_max_power(v); }
+
+void robot::set_max_speed(int vf, int vl, int vr, int vb) {
+    set_max_power(vf, vl, vr, vb);
+}
+
+void robot::set_max_power(int v) {
     motor_controller *const motors[] = {motor_l, motor_r, motor_f, motor_b};
     for (auto iter = motors; iter != motors + 4; iter++) {
-        (*iter)->max_speed = v;
+        (*iter)->max_power = v;
     }
 }
 
-void robot::set_max_speed(int vf, int vl, int vr, int vb) {
-    motor_f->max_speed = vf;
-    motor_l->max_speed = vl;
-    motor_r->max_speed = vr;
-    motor_b->max_speed = vb;
+void robot::set_max_power(int vf, int vl, int vr, int vb) {
+    motor_f->max_power = vf;
+    motor_l->max_power = vl;
+    motor_r->max_power = vr;
+    motor_b->max_power = vb;
 }
 
 void robot::move_until_blocked(direction d, const int timeout) {
@@ -211,7 +217,7 @@ void robot::start_arm() { mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED); }
 
 void robot::stop_arm() { mechanic_arm_motor.go(0); }
 
-void robot::__test(){
+void robot::__test() {
     mot_pair_fb->go();
     mot_pair_lr->go();
 }

@@ -53,7 +53,7 @@ void motor_controller::stop() {
 }
 
 void motor_controller::go(int speed) {
-    double new_speed_f     = max_speed / 100.0 * speed;
+    double new_speed_f     = max_power / 100.0 * speed;
     double new_speed_abs_f = math::absolute(new_speed_f); // prevent overflow
     if (new_speed_abs_f > 255) {
         new_speed_abs_f = 255;

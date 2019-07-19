@@ -24,8 +24,8 @@ direction::RIGHTWARD    //向右  =3
 ### `robot::move_until_blocked(direction v1, [int v2])`函数
 v1指定机器人前进的方向，v2指定机器人到底在预定距离范围之内多少毫秒才停止。v2可以忽略不填，此时它和填0意思相同，代表一旦进入预定范围之内就立刻停止。
 
-### `robot::set_max_speed(int v1)`
-用于设置机器人的全局最大速度。这个设置会覆盖掉你对每个电机单独设置的最大速度
+### `robot::set_max_power(int v1)`
+用于设置机器人的全局最大功率。这个设置会覆盖掉你对每个电机单独设置的最大功率
 
 ## 通过`robot`对象控制机器人行进
 ```cpp
@@ -124,14 +124,14 @@ for(int i = 0; i < 4; i++){
     r.move_until_blocked(d);
 }
 ```
-然而不要忘记我们需要控制机器人的速度以防止它因为过快而不能及时停止，所以还要在之前加上`robot.set_max_speed(120)`。
+然而不要忘记我们需要控制机器人的速度以防止它因为过快而不能及时停止，所以还要在之前加上`robot.set_max_power(120)`。
 于是我们就基本完成了。代码如下
 ```cpp
 #include "robot.h"
 robot r;
 void setup(){
     r.setup();
-    r.set_max_speed(120);
+    r.set_max_power(120);
 }
 void loop(){
     for(int i = 0; i < 4; i++){

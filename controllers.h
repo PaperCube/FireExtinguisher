@@ -18,7 +18,7 @@ struct motor_controller {
   public:
     int pwm_pin;
     int direction_pin;
-    int max_speed = 0;
+    int max_power = 0;
 
     motor_controller();
     motor_controller(int, int);

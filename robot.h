@@ -3,7 +3,6 @@
 
 #include "_robot_all_includes.h"
 
-
 int convert(int);
 
 struct robot {
@@ -24,6 +23,8 @@ struct robot {
     robot();
     void set_max_speed(int);
     void set_max_speed(int, int, int, int);
+    void set_max_power(int);
+    void set_max_power(int, int, int, int);
     void setup();
     void run();
     void __test();
