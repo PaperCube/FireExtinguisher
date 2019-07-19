@@ -1,10 +1,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include "controllers.h"
-#include "parameters.h"
-#include "sensors.h"
-#include <Arduino.h>
+#include "_robot_all_includes.h"
+
 
 int convert(int);
 

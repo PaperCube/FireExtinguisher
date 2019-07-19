@@ -1,6 +1,6 @@
 # “灭火”Arduino机器人示例与接口解释
-## 万能头文件
-`robot_all.h`包含了所有你可能用到的**本类库的**头文件。
+## 头文件
+只需要包含`"robot.h"`便可以使用本类库的主要功能。
 ## 内置的方向
 有许多地方以一个特定的方向为参数。它有四个值，其书写方式和含义以及等效的数值为：
 ```cpp
@@ -9,7 +9,7 @@ direction::LEFTWARD     //向左  =1
 direction::BACKWARD     //向后  =2
 direction::RIGHTWARD    //向右  =3
 ```
-如果提示找不到符号，请先`#include "definitions.h"`或使用万能头文件`"robot_all.h"`
+请先`#include "robot.h"`
 ## **文件`robot.h`**
 `robot.h`定义了控制机器人的基本内容。在使用前，请
 1. 声明robot对象。比如：
@@ -81,7 +81,7 @@ r.read_sensor(direction::LEFT, -1); // 读以前方左侧为编号1，逆时针�
 首先编写第一步
 ```cpp
 // app.ino
-#include "robot_all.h"
+#include "robot.h"
 robot r;
 quad_directional *motors;
 void setup(){
@@ -127,7 +127,7 @@ for(int i = 0; i < 4; i++){
 然而不要忘记我们需要控制机器人的速度以防止它因为过快而不能及时停止，所以还要在之前加上`robot.set_max_speed(120)`。
 于是我们就基本完成了。代码如下
 ```cpp
-#include "robot_all.h"
+#include "robot.h"
 robot r;
 void setup(){
     r.setup();

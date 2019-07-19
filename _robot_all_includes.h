@@ -10,7 +10,6 @@
 #include "light.h "
 #include "math_util.h"
 #include "parameters.h"
-#include "robot.h"
 #include "sensors.h"
 #include "sout.h"
 
