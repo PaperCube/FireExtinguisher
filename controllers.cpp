@@ -9,8 +9,10 @@ using serial::sdebug;
 builtin_motor_driver::builtin_motor_driver(int port) {
     if (port <= 0 || port > 6)
         port = 1;
-    digital_l    = 38 + 2 * (6 - port);
-    digital_r    = digital_l + 1;
+    digital_l = 38 + 2 * (6 - port);
+    digital_r = digital_l + 1;
+    pinMode(digital_l, OUTPUT);
+    pinMode(digital_r, OUTPUT);
     analog_pin   = 8 + (6 - port);
     all_low_stop = true;
 }

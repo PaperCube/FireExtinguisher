@@ -15,6 +15,11 @@ robot::robot() : mechanic_arm_motor(MECHANIC_ARM_MOTOR_ID) {
     this->is_setup = false;
 }
 
+motor_controller *robot::get_motor(direction d) {
+    const motor_controller motors[] = {motor_f, motor_l, motor_b, motor_r};
+    return motors[(int)d];
+}
+
 void robot::init_sensors() { sensor_manager::instance.prepare(); }
 
 void robot::init_motors() {

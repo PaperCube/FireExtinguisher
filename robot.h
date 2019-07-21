@@ -21,6 +21,8 @@ struct robot {
     quad_directional *motor_group;
 
     robot();
+
+    motor_controller *get_motor(direction);
     void set_max_speed(int);
     void set_max_speed(int, int, int, int);
     void set_max_power(int);
