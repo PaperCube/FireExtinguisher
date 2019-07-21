@@ -1,5 +1,5 @@
 # “灭火”Arduino机器人示例与接口解释
-*版本v7.21.1*
+*版本v7.21.2*
 ## 头文件
 只需要包含`"robot.h"`便可以使用本类库的主要功能。
 ## 内置的方向
@@ -62,6 +62,37 @@ r.read_sensor(direction::FORWARD); // 综合考虑前方两个数值
 r.read_sensor(direction::LEFT, -1); // 读以前方左侧为编号1，逆时针依次编号，编号为3的传感器的数值
 ```
 这样读出的值是转换过的。你也可以调用`read_sensor_raw`来读出传感器的原始值。其参数和含义和`read_sensor`函数完全相同。
+
+## **机械臂**
+首先请将机械臂连接到主板上绿色的电机接口。然后请设置机械臂的接口编号。例如，如果你插到了M1端口，那么请设置为1. 代码示例如下所示  
+```cpp
+#include "robot.h"
+
+robot r;
+void setup(){
+    MECHANIC_ARM_MOTOR_ID = 1;
+    r.setup();
+}
+```
+要开启，请调用`robot::start_arm();`。要关闭，请调用`robot::stop_arm();`。例如：
+```
+void setup(){
+    ......
+    r.start_arm();
+    delay(1000);
+    r.stop_arm();
+}
+```
+如果你发现它的转速不合适，请在启动机械臂之前更改`MECHANIC_ARM_ROTATION_SPEED`的值。如果你已经启动了机械臂，请先将它关闭。
+例如：
+```
+r.start_arm();
+.......
+r.stop_arm();
+
+MECHANIC_ARM_ROTATION_SPEED = 20;
+r.start_arm();
+```
 
 ------------------------
 

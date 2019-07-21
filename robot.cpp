@@ -62,6 +62,8 @@ void robot::setup() {
 
     init_sensors();
     init_motors();
+
+    mechanic_arm_motor = mechanic_arm_motor(MECHANIC_ARM_MOTOR_ID);
 }
 
 void print_visually(int v) {
