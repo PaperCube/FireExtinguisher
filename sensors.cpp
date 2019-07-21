@@ -81,14 +81,14 @@ sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
 }
 
 int sensor_pair::read() {
-    int vl = read_l();
-    int vr = read_r();
+    long vl = read_l();
+    long vr = read_r();
     return (vl + vr) / 2;
 }
 
 int sensor_pair::read_raw() {
-    int vl = get_left()->read_raw_calibrated();
-    int vr = get_right()->read_raw_calibrated();
+    long vl = get_left()->read_raw_calibrated();
+    long vr = get_right()->read_raw_calibrated();
     return (vl + vr) / 2;
 }
 

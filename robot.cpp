@@ -16,7 +16,7 @@ robot::robot() : mechanic_arm_motor(MECHANIC_ARM_MOTOR_ID) {
 }
 
 motor_controller *robot::get_motor(direction d) {
-    const motor_controller motors[] = {motor_f, motor_l, motor_b, motor_r};
+    motor_controller *const motors[] = {motor_f, motor_l, motor_b, motor_r};
     return motors[(int)d];
 }
 
