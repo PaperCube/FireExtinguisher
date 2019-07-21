@@ -15,17 +15,17 @@ direction::RIGHTWARD    //向右  =3
 `robot.h`定义了控制机器人的基本内容。在使用前，请
 1. 声明robot对象。比如：
    
-2. 使用`robot::setup()`进行初始化。例如：
+2. 使用`r.setup()`进行初始化。例如：
     ```cpp
     robot r;
     r.setup();
     ```
     **_注意：这非常重要。否则你的机器人将不能正常运行_**
 
-### `robot::move_until_blocked(direction v1, [int v2])`函数
+### `r.move_until_blocked(direction v1, [int v2])`函数
 v1指定机器人前进的方向，v2指定机器人到底在预定距离范围之内多少毫秒才停止。v2可以忽略不填，此时它和填0意思相同，代表一旦进入预定范围之内就立刻停止。
 
-### `robot::set_max_power(int v1)`
+### `r.set_max_power(int v1)`
 用于设置机器人的全局最大功率。这个设置会覆盖掉你对每个电机单独设置的最大功率
 
 ## 通过`robot`对象控制机器人行进
@@ -42,19 +42,19 @@ r.go(50);
 * 机器人向前行进1秒
 * 机器人停止1秒
 * 机器人以原来速度的一半（大约一半）运行下去，并且不停止。
-### `robot::stop()`函数
+### `r.stop()`函数
 使之立即停止。
 
-### `robot::go([int v])`函数
+### `r.go([int v])`函数
 使之以100的速度前进。如果不填参数，机器人会以速度100运行。速度的范围是0-100，可以超出这个范围。当填写100时其实际速度是每个电机定义的最大速度。其值请见`robot.cpp`中的`FULL_SPEED`。
 
 
-### `robot::set_direction(direction v)`函数
+### `r.set_direction(direction v)`函数
 设置机器人的前进方向。如果在机器人运行途中调用此函数，机器人会立刻更改方向。
 > 警告：机器人在高速运行时突然更改方向可能导致打滑/漂移。
 
 ## **传感器**
-### `robot::read_sensor(direction v1, [signed char v2]`函数
+### `r.read_sensor(direction v1, [signed char v2]`函数
 此函数可以读方向v1上的传感器的值。此函数也可以写第二个参数，用于指定从哪个传感器读取值。例如
 ```cpp
 robot r;
@@ -74,7 +74,7 @@ void setup(){
     r.setup();
 }
 ```
-要开启，请调用`robot::start_arm();`。要关闭，请调用`robot::stop_arm();`。例如：
+要开启，请调用`r.start_arm();`。要关闭，请调用`r.stop_arm();`。例如：
 ```
 void setup(){
     ......
@@ -149,7 +149,7 @@ for(int i = 0; i < 4; i++){
 }
 ```
 这里我们使用了强制类型转换，因为direction中所定义的四个方向其实际值分别按照定义的顺序是0, 1, 2, 3，所以将0-3这四个数强制转换成direction类型就可以得到它们四个值。如果你不明白这是怎么运作的，请学习C++中的枚举(`enum`, Enumeration).  
-接下来我们投机取巧，使用`robot::move_until_blocked`函数来使机器人在遇到障碍时停止。
+接下来我们投机取巧，使用`r.move_until_blocked`函数来使机器人在遇到障碍时停止。
 ```cpp
 for(int i = 0; i < 4; i++){
     direction d = (direction) i;
@@ -185,12 +185,12 @@ void move_until_blocked(direction d){
 ```
 只需要把`loop`函数中的`r.move_until_blocked(d)` 换成 `move_until_blocked(d)`，并且把它放在 `void setup(){...`之前就可以了。
 
-这么做简单明朗。然而如果你观察`robot::move_until_blocked`的定义，你会发现还是少了一些东西。你可以试着找出缺少了什么，并且描述一下这些缺少的部分起到了什么样的功能。
+这么做简单明朗。然而如果你观察`r.move_until_blocked`的定义，你会发现还是少了一些东西。你可以试着找出缺少了什么，并且描述一下这些缺少的部分起到了什么样的功能。
 
 # 更改程序设置 - 沟通硬件和软件
-请在调用`robot::setup()`之前设置下列参数。这些都是通过赋值进行的，因此你不能把他们放在函数外面。
+请在调用`r.setup()`之前设置下列参数。这些都是通过赋值进行的，因此你不能把他们放在函数外面。
 ## **设置传感器对应的端口号**
-请使用`robot::set_sensors(int[8])`
+请使用`r.set_sensors(int[8])`
 例如：
 ```
 robot r;
