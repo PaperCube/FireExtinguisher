@@ -1,4 +1,5 @@
 # “灭火”Arduino机器人示例与接口解释
+*版本v7.21.1*
 ## 头文件
 只需要包含`"robot.h"`便可以使用本类库的主要功能。
 ## 内置的方向
@@ -154,3 +155,21 @@ void move_until_blocked(direction d){
 只需要把`loop`函数中的`r.move_until_blocked(d)` 换成 `move_until_blocked(d)`，并且把它放在 `void setup(){...`之前就可以了。
 
 这么做简单明朗。然而如果你观察`robot::move_until_blocked`的定义，你会发现还是少了一些东西。你可以试着找出缺少了什么，并且描述一下这些缺少的部分起到了什么样的功能。
+
+# 更改程序设置 - 沟通硬件和软件
+请在调用`robot::setup()`之前设置下列参数。这些都是通过赋值进行的，因此你不能把他们放在函数外面。
+## **设置传感器对应的端口号**
+请使用`robot::set_sensors(int[8])`
+例如：
+```
+robot r;
+int v[] = {1, 2, 3, 4, 5, 6, 7, 8};
+r.set_sensors(v);
+```
+
+## **设置上方灭火电机的标号**
+`MECHANIC_ARM_MOTOR_ID = ...;`
+填写灭火电机接口的标号
+
+## **设置上方旋转灭火电机的转速** ##
+例如`MECHANIC_ARM_ROTATION_SPEED = 15;`

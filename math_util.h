@@ -13,6 +13,13 @@ template <class T> T copy_sign(T sign, T value) {
     return sign < 0 ? -absolute(value) : absolute(value);
 }
 
+template <class T, class R> void copy_arr(T *from_begin, T *from_end, R *to){
+    int sz = from_end - from_begin;
+    for(int i = 0; i < sz; i++){
+        to[i] = from_begin[i];
+    }
+}
+
 double round_d(double value);
 
 class averager {

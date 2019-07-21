@@ -25,32 +25,32 @@
  * |                       |
  * ==[4]====Back======[5]===
  */
-const int SENSOR_PINS[] = {1, 2, 3, 4, 5, 6, 7, 8};
+int SENSOR_PINS[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 /**
  * 定义上方旋转的灭火电机的标号
  */
-const int MECHANIC_ARM_MOTOR_ID = 1;
+int MECHANIC_ARM_MOTOR_ID = 1;
 
 /**
  * 设置上方旋转灭火电机的转速
  */
-const int MECHANIC_ARM_ROTATION_SPEED = 15;
+int MECHANIC_ARM_ROTATION_SPEED = 15;
 
 /**
  * 设置机器人的默认最大速度
  */
-const int FULL_SPEED = 130;
+int FULL_SPEED = 130;
 
 /**
  * 设定机器人自动停止时的传感器值，仅对move_until_blocked有效
  */
-const int STOP_THRESHOLD = 55;
+int STOP_THRESHOLD = 55;
 
 /**
  * 设置机器人开始减速时的最低传感器值，仅对move_until_blocked有效
  */
-const int SLOW_THRESHOLD = 115;
+int SLOW_THRESHOLD = 115;
 
 /*
  * Above are all parameters that you can modify if necessary.

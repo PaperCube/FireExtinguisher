@@ -52,27 +52,31 @@ void motor_controller::stop() {
     analogWrite(pwm_pin, 0);
 }
 
-void motor_controller::go(int speed) {
-    double new_speed_f     = max_power / 100.0 * speed;
-    double new_speed_abs_f = math::absolute(new_speed_f); // prevent overflow
-    if (new_speed_abs_f > 255) {
-        new_speed_abs_f = 255;
-        new_speed_f     = math::copy_sign(new_speed_f, 255.0);
+void motor_controller::power(int p) {
+    double power_f     = p;
+    double power_abs_f = math::absolute(power_f);
+    if (power_abs_f > 255) {
+        power_abs_f = 255;
+        power_f     = math::copy_sign(power_f, 255.0);
     }
-    int  new_speed_abs = (int)new_speed_abs_f;
-    int  new_speed     = (int)new_speed_f;
-    bool backwards     = new_speed < 0;
-    if (new_speed == 0) {
+    // conversion should be done on float point types to prevent negative values
+    // caused by overflow
+
+    int  power_abs = (int)power_abs_f;
+    int  power     = (int)power_f;
+    bool backwards = power < 0;
+    if (power == 0) {
         stop();
         sdebug << "Stopping " << direction_pin << " " << pwm_pin << endl;
         return;
     }
-    sdebug << "motor_controller::go(int) value passed in :" << speed
-           << " new_speed = " << new_speed << endl;
+    sdebug << "motor_controller::power(int) value passed in :" << p << endl;
     sdebug << "direction: " << direction_pin << " pwm: " << pwm_pin << endl;
     digitalWrite(direction_pin, backwards ? HIGH : LOW);
-    analogWrite(pwm_pin, backwards ? (255 - new_speed_abs) : new_speed_abs);
+    analogWrite(pwm_pin, backwards ? (255 - power_abs) : power_abs);
 }
+
+void motor_controller::go(int speed) { power(max_power / 100.0 * speed); }
 
 void motor_controller::go() { go(100); }
 

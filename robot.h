@@ -46,6 +46,8 @@ struct robot {
 
     void start_arm();
     void stop_arm();
+
+    void set_sensors(int *);
 };
 
 #endif

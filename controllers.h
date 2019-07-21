@@ -22,6 +22,7 @@ struct motor_controller {
 
     motor_controller();
     motor_controller(int, int);
+    void power(int);
     void init(int, int);
     void stop();
     void go(int speed);

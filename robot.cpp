@@ -75,8 +75,8 @@ void print_visually(int v) {
 
 void robot::set_max_speed(int v) { set_max_power(v); }
 
-void robot::set_max_speed(int vf, int vl, int vr, int vb) {
-    set_max_power(vf, vl, vr, vb);
+void robot::set_max_speed(int vf, int vl, int vb, int vr) {
+    set_max_power(vf, vl, vb, vr);
 }
 
 void robot::set_max_power(int v) {
@@ -86,7 +86,7 @@ void robot::set_max_power(int v) {
     }
 }
 
-void robot::set_max_power(int vf, int vl, int vr, int vb) {
+void robot::set_max_power(int vf, int vl, int vb, int vr) {
     motor_f->max_power = vf;
     motor_l->max_power = vl;
     motor_r->max_power = vr;
@@ -221,3 +221,5 @@ void robot::__test() {
     mot_pair_fb->go();
     mot_pair_lr->go();
 }
+
+void robot::set_sensors(int *arr) { math::copy_arr(arr, arr + 8, SENSOR_PINS); }

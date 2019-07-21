@@ -8,11 +8,11 @@
 
 #include <Arduino.h>
 
-extern const int SENSOR_PINS[];
-extern const int MECHANIC_ARM_MOTOR_ID;
-extern const int MECHANIC_ARM_ROTATION_SPEED;
-extern const int FULL_SPEED;
-extern const int STOP_THRESHOLD;
-extern const int SLOW_THRESHOLD;
+extern int SENSOR_PINS[8];
+extern int MECHANIC_ARM_MOTOR_ID;
+extern int MECHANIC_ARM_ROTATION_SPEED;
+extern int FULL_SPEED;
+extern int STOP_THRESHOLD;
+extern int SLOW_THRESHOLD;
 
 #endif
