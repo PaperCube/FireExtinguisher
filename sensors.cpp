@@ -4,6 +4,8 @@
 #include "sensors.h"
 #include "sout.h"
 
+using namespace serial;
+
 const int NATURAL_CONSTANT = 2.71828;
 
 int prox_sensor::convert(int value) {
@@ -12,12 +14,19 @@ int prox_sensor::convert(int value) {
     return 30000 / value;
 }
 
-int prox_sensor::read_raw() { return analogRead(pin); }
+int prox_sensor::read_raw() {
+    int value = analogRead(pin);
+    if (value < 80)
+        value = 80;
+    else if (value > 700)
+        value = 700;
+    return value;
+}
 
 int prox_sensor::read() { return convert(read_raw_calibrated()); }
 
 int prox_sensor::read_raw_calibrated() {
-    const int REPEAT_CNT = 200;
+    const int REPEAT_CNT = 120;
     long long sum        = 0;
     for (int i = 0; i < REPEAT_CNT; i++) {
         sum += read_raw();
