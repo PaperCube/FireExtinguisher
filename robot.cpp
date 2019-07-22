@@ -186,7 +186,8 @@ void robot::run() {
 
 void robot::stop() { motor_group->stop(); }
 
-void robot::set_direction(direction d) { motor_group->set_direction(d); }
+void        robot::set_direction(direction d) { motor_group->set_direction(d); }
+void robot::set_direction(int d) { set_direction((direction)d); }
 
 void robot::go() { motor_group->go(); }
 
@@ -230,3 +231,9 @@ void robot::__test() {
 }
 
 void robot::set_sensors(int *arr) { math::copy_arr(arr, arr + 8, SENSOR_PINS); }
+
+void robot::set_sensors(
+    int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    int v[] = {v1, v2, v3, v4, v5, v6, v7, v8};
+    set_sensors(v);
+}

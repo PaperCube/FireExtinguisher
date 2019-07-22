@@ -35,6 +35,7 @@ struct robot {
     /* Begin: delegated by quad_directional *motor_group */
     void stop();
     void set_direction(direction);
+    void set_direction(int);
     void go();
     void go(int);
     void reverse_and_stop(int);
@@ -50,6 +51,7 @@ struct robot {
     void stop_arm();
 
     void set_sensors(int *);
+    void set_sensors(int, int, int, int, int, int, int, int);
 };
 
 #endif
