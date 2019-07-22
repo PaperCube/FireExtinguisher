@@ -122,7 +122,7 @@ void sensor_manager::prepare() {
     if (is_prepared)
         return;
     is_prepared                 = true;
-    const int sensor_ordinals[] = {1, 8, 3, 2, 7, 6, 5, 4};
+    const int sensor_ordinals[] = {1, 8, 3, 2, 5, 4, 7, 6};
     for (int i = 0; i < 4; i++) {
         prox_sensor *l = new prox_sensor(
                         SENSOR_PINS[sensor_ordinals[i * 2] - 1]),

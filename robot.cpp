@@ -186,7 +186,7 @@ void robot::run() {
 
 void robot::stop() { motor_group->stop(); }
 
-void        robot::set_direction(direction d) { motor_group->set_direction(d); }
+void robot::set_direction(direction d) { motor_group->set_direction(d); }
 void robot::set_direction(int d) { set_direction((direction)d); }
 
 void robot::go() { motor_group->go(); }
