@@ -13,8 +13,6 @@ class prox_sensor {
     int read_raw();
     int read_raw_calibrated();
     int read();
-
-    static void debug_show_values();
 };
 
 class sensor_pair {
@@ -45,4 +43,11 @@ class sensor_manager {
     sensor_type *sensor_at(direction);
     void         prepare();
 };
+
+namespace sensor_debugging {
+
+int  debug_show_values();
+void __interactive_test();
+
+} // namespace sensor_debugging
 #endif

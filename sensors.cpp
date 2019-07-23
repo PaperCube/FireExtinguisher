@@ -1,5 +1,8 @@
 #include <Arduino.h>
 
+#include "buttons.h"
+#include "buzzer.h"
+#include "math_util.h"
 #include "parameters.h"
 #include "sensors.h"
 #include "sout.h"
@@ -36,6 +39,59 @@ int prox_sensor::read_raw_calibrated() {
 
 prox_sensor::prox_sensor(int pin_id) { pin = pin_id; }
 
+sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
+    l = sl;
+    r = sr;
+}
+
+int sensor_pair::read() {
+    long vl = read_l();
+    long vr = read_r();
+    return (vl + vr) / 2;
+}
+
+int sensor_pair::read_raw() {
+    long vl = get_left()->read_raw_calibrated();
+    long vr = get_right()->read_raw_calibrated();
+    return (vl + vr) / 2;
+}
+
+int sensor_pair::read_l() { return l->read(); }
+
+int sensor_pair::read_r() { return r->read(); }
+
+prox_sensor *sensor_pair::get_left() { return l; }
+
+prox_sensor *sensor_pair::get_right() { return r; }
+
+sensor_manager sensor_manager::instance;
+
+sensor_manager::sensor_manager() { is_prepared = false; }
+
+sensor_manager::sensor_type *sensor_manager::sensor_at(direction_t d) {
+    prepare();
+    return this->sensors[(int)d];
+}
+
+void sensor_manager::prepare() {
+    if (is_prepared)
+        return;
+    is_prepared                 = true;
+    const int sensor_ordinals[] = {1, 8, 3, 2, 5, 4, 7, 6};
+    for (int i = 0; i < 4; i++) {
+        prox_sensor *l = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2] - 1]),
+                    *r = new prox_sensor(
+                        SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
+        sensors[i] = new sensor_pair(l, r);
+    }
+}
+
+/*
+ * =================================
+ * begin: namespace sensor_debugging
+ */
+
 namespace sensor_debugging {
 
 int read(int pin) {
@@ -69,8 +125,7 @@ void fill(char *buf, int value, int len) {
     buf[len] = 0;
 }
 
-void debug_show_values() {
-    using namespace serial;
+int debug_show_values() {
     while (true) {
         char buf[64];
         for (int i = 1; i <= 8; i++) {
@@ -82,52 +137,60 @@ void debug_show_values() {
     }
 }
 
-} // namespace sensor_debugging
+void __interactive_test() {
+    int *pins = SENSOR_PINS;
+    sout.init();
+    sout << "Beginning interactive sensor test. Hold button 1 to quit" << endl;
+    button b(1);
+    long   first_press = -1;
+    struct info {
+        bool        pass = false;
+        prox_sensor sens;
+        int         min, max;
 
-sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
-    l = sl;
-    r = sr;
-}
-
-int sensor_pair::read() {
-    long vl = read_l();
-    long vr = read_r();
-    return (vl + vr) / 2;
-}
-
-int sensor_pair::read_raw() {
-    long vl = get_left()->read_raw_calibrated();
-    long vr = get_right()->read_raw_calibrated();
-    return (vl + vr) / 2;
-}
-
-int sensor_pair::read_l() { return l->read(); }
-
-int sensor_pair::read_r() { return r->read(); }
-
-prox_sensor *sensor_pair::get_left() { return l; }
-
-prox_sensor *sensor_pair::get_right() { return r; }
-
-sensor_manager sensor_manager::instance;
-
-sensor_manager::sensor_manager() { is_prepared = false; }
-
-sensor_manager::sensor_type *sensor_manager::sensor_at(direction d) {
-    prepare();
-    return this->sensors[(int)d];
-}
-
-void sensor_manager::prepare() {
-    if (is_prepared)
-        return;
-    is_prepared                 = true;
-    const int sensor_ordinals[] = {1, 8, 3, 2, 5, 4, 7, 6};
-    for (int i = 0; i < 4; i++) {
-        prox_sensor *l = new prox_sensor(
-                        SENSOR_PINS[sensor_ordinals[i * 2] - 1]),
-                    *r = new prox_sensor(
-                        SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
-        sensors[i] = new sensor_pair(l, r);
+        info() : sens(-1) { pass = false; }
+        ~info(){}
+    } infos[8];
+    _loop(i, 8) {
+        infos[i].sens = prox_sensor(pins[i]);
+        infos[i].min  = 0x7FFF;
+        infos[i].max  = 0x8000;
+    }
+    int  pass_cnt    = 0;
+    bool interrupted = false;
+    while (true) {
+        if (pass_cnt >= 8)
+            break;
+        if (b.is_pressed()) {
+            if (first_press < 0)
+                first_press = millis();
+            else if (millis() - first_press > 1500) {
+                interrupted = true;
+                break;
+            }
+        }
+        for (int i = 0; i < 8; i++) {
+            info &cur_info = infos[i];
+            if (cur_info.pass) {
+                continue;
+            }
+            const int num = i + 1;
+            int       v   = cur_info.sens.read();
+            cur_info.min  = math::min_of(v, cur_info.min);
+            cur_info.max  = math::max_of(v, cur_info.max);
+            if (cur_info.max - cur_info.min > 120) {
+                cur_info.pass = true;
+                pass_cnt++;
+                sout << "Sensor #" << num << " (pin " << pins[i]
+                     << ") is detected" << endl;
+            }
+        }
+    }
+    if (interrupted) {
+        sout << "Interactive test cancelled by user" << endl;
+    } else {
+        sout << "Test done" << endl;
     }
 }
+
+} // namespace sensor_debugging

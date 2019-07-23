@@ -23,4 +23,7 @@ double round_d(double value) {
 
 double averager::get_avg() { return (double)sum / cnt; }
 
+template int max_of(int a, int b);
+template int min_of(int a, int b);
+
 } // namespace math
