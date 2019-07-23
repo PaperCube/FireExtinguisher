@@ -35,7 +35,7 @@ int MECHANIC_ARM_MOTOR_ID = 1;
 /**
  * 设置上方旋转灭火电机的转速
  */
-int MECHANIC_ARM_ROTATION_SPEED = 15;
+int MECHANIC_ARM_ROTATION_SPEED = 255;
 
 /**
  * 设置机器人的默认最大速度
