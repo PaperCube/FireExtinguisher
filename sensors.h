@@ -40,7 +40,7 @@ class sensor_manager {
   public:
     sensor_type *sensors[4];
     sensor_manager();
-    sensor_type *sensor_at(direction);
+    sensor_type *sensor_at(direction_t);
     void         prepare();
 };
 

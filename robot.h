@@ -22,7 +22,7 @@ struct robot {
 
     robot();
 
-    motor_controller *get_motor(direction);
+    motor_controller *get_motor(direction_t);
     void set_max_speed(int);
     void set_max_speed(int, int, int, int);
     void set_max_power(int);
@@ -30,22 +30,21 @@ struct robot {
     void setup();
     void run();
     void __test();
-    void move_until_blocked(direction, int = 0);
+    void move_until_blocked(direction_t, int = 0);
 
     /* Begin: delegated by quad_directional *motor_group */
     void stop();
-    void set_direction(direction);
-    void set_direction(int);
+    void set_direction(direction_t);
     void go();
     void go(int);
     void reverse_and_stop(int);
     void reverse_and_stop(int, int);
     /* End: delegate */
 
-    int read_sensor(direction);
-    int read_sensor(direction, signed char);
+    int read_sensor(direction_t);
+    int read_sensor(direction_t, signed char);
 
-    int read_sensor_raw(direction, signed char = 0);
+    int read_sensor_raw(direction_t, signed char = 0);
 
     void start_arm();
     void stop_arm();

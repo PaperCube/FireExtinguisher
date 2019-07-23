@@ -29,7 +29,7 @@ void builtin_motor_driver::go(int speed) {
     analogWrite(analog_pin, math::absolute(speed));
 }
 
-direction reverse_direction(direction d) {
+direction reverse_direction(direction_t d) {
     static const direction rev_directions[] = {
         direction::BACKWARD, direction::RIGHTWARD, direction::LEFTWARD,
         direction::FORWARD};
@@ -133,10 +133,10 @@ void quad_directional::stop() {
     this->current_speed = 0;
 }
 
-void quad_directional::set_direction(direction d) {
+void quad_directional::set_direction(direction_t d) {
     int original_speed = current_speed;
     stop();
-    current_direction = d;
+    current_direction = (direction)d;
     go(original_speed);
 }
 

@@ -3,7 +3,7 @@
 
 #include "definitions.h"
 
-extern direction reverse_direction(direction);
+extern direction reverse_direction(direction_t);
 
 struct builtin_motor_driver {
   private:
@@ -77,7 +77,7 @@ struct quad_directional {
   public:
     quad_directional(motor_pair *, direction, motor_pair *, direction);
     void stop();
-    void set_direction(direction);
+    void set_direction(direction_t);
     void go();
     void go(int);
     void reverse_and_stop(int);

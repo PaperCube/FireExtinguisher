@@ -15,9 +15,9 @@ robot::robot() : mechanic_arm_motor(MECHANIC_ARM_MOTOR_ID) {
     this->is_setup = false;
 }
 
-motor_controller *robot::get_motor(direction d) {
+motor_controller *robot::get_motor(direction_t d) {
     motor_controller *const motors[] = {motor_f, motor_l, motor_b, motor_r};
-    return motors[(int)d];
+    return motors[d];
 }
 
 void robot::init_sensors() { sensor_manager::instance.prepare(); }
@@ -100,7 +100,7 @@ void robot::set_max_power(int vf, int vl, int vb, int vr) {
     motor_b->max_power = vb;
 }
 
-void robot::move_until_blocked(direction d, const int timeout) {
+void robot::move_until_blocked(direction_t d, const int timeout) {
     button b(3);
     motor_group->set_direction(d);
     auto *sensor = sensor_manager::instance.sensor_at(d);
@@ -186,8 +186,7 @@ void robot::run() {
 
 void robot::stop() { motor_group->stop(); }
 
-void robot::set_direction(direction d) { motor_group->set_direction(d); }
-void robot::set_direction(int d) { set_direction((direction)d); }
+void robot::set_direction(direction_t d) { motor_group->set_direction(d); }
 
 void robot::go() { motor_group->go(); }
 
@@ -199,11 +198,11 @@ void robot::reverse_and_stop(int v, int v2) {
     motor_group->reverse_and_stop(v, v2);
 }
 
-int robot::read_sensor(direction d) {
+int robot::read_sensor(direction_t d) {
     return sensor_manager::instance.sensor_at(d)->read();
 }
 
-int robot::read_sensor(direction d, signed char which) {
+int robot::read_sensor(direction_t d, signed char which) {
     auto *sensor = sensor_manager::instance.sensor_at(d);
     if (which < 0) {
         return sensor->read_l();
@@ -211,7 +210,7 @@ int robot::read_sensor(direction d, signed char which) {
     return sensor->read_r();
 }
 
-int robot::read_sensor_raw(direction d, signed char which) {
+int robot::read_sensor_raw(direction_t d, signed char which) {
     auto *sensor = sensor_manager::instance.sensor_at(d);
     if (which == 0) {
         return sensor->read_raw();
