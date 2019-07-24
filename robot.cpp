@@ -96,8 +96,15 @@ void robot::set_max_power(int v) {
 void robot::set_max_power(int vf, int vl, int vb, int vr) {
     motor_f->max_power = vf;
     motor_l->max_power = vl;
-    motor_r->max_power = vr;
     motor_b->max_power = vb;
+    motor_r->max_power = vr;
+}
+
+void robot::reverse_power_ratio(float rf, float rl, float rb, float rr) {
+    motor_f->rev_power_ratio = rf;
+    motor_l->rev_power_ratio = rl;
+    motor_b->rev_power_ratio = rb;
+    motor_r->rev_power_ratio = rr;
 }
 
 void robot::move_until_blocked(direction_t d, const int timeout) {

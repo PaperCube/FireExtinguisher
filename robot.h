@@ -27,6 +27,7 @@ struct robot {
     void              set_max_speed(int, int, int, int);
     void              set_max_power(int);
     void              set_max_power(int, int, int, int);
+    void              reverse_power_ratio(float, float, float, float);
     void              setup();
     void              run();
     void              __test();

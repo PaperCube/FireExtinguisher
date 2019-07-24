@@ -8,6 +8,7 @@ extern direction reverse_direction(direction_t);
 struct builtin_motor_driver {
   private:
     int digital_l, digital_r, analog_pin;
+    int port;
 
   public:
     bool all_low_stop;
@@ -18,9 +19,10 @@ struct builtin_motor_driver {
 
 struct motor_controller {
   public:
-    int pwm_pin;
-    int direction_pin;
-    int max_power = 0;
+    int   pwm_pin;
+    int   direction_pin;
+    int   max_power       = 0;
+    float rev_power_ratio = 0;
 
     motor_controller();
     motor_controller(int, int);

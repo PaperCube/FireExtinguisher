@@ -85,7 +85,11 @@ void motor_controller::power(int p) {
     analogWrite(pwm_pin, backwards ? (255 - power_abs) : power_abs);
 }
 
-void motor_controller::go(int speed) { power(max_power / 100.0 * speed); }
+void motor_controller::go(int speed) {
+    int pwr        = max_power / 100.0 * speed;
+    int actual_pwr = pwr < 0 ? pwr * rev_power_ratio : pwr;
+    power(actual_pwr);
+}
 
 void motor_controller::go() { go(100); }
 
