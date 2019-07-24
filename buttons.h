@@ -2,12 +2,13 @@
 #define BUTTONS_H
 
 class button {
-   private:
+  private:
     int pin_id;
     int button_id;
-   public:
+
+  public:
     button(int);
-    void set_hold_timeout(long v);
+    // void set_hold_timeout(long v);
     bool is_pressed();
     void wait_until_released();
 };

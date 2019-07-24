@@ -47,7 +47,7 @@ class sensor_manager {
 namespace sensor_debugging {
 
 int  debug_show_values();
-void __interactive_test();
+void __interactive_test(int *);
 
 } // namespace sensor_debugging
 #endif

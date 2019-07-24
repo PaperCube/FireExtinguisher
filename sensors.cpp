@@ -137,10 +137,8 @@ int debug_show_values() {
     }
 }
 
-void __interactive_test() {
-    int *pins = SENSOR_PINS;
+void __interactive_test(int *pins) {
     sout.init();
-    sout << "Beginning interactive sensor test. Hold button 1 to quit" << endl;
     button b(1);
     long   first_press = -1;
     struct info {
@@ -149,7 +147,7 @@ void __interactive_test() {
         int         min, max;
 
         info() : sens(-1) { pass = false; }
-        ~info(){}
+        ~info() {}
     } infos[8];
     _loop(i, 8) {
         infos[i].sens = prox_sensor(pins[i]);
@@ -158,10 +156,12 @@ void __interactive_test() {
     }
     int  pass_cnt    = 0;
     bool interrupted = false;
+    sout << "Beginning interactive sensor test. Hold button 1 to quit" << endl;
     while (true) {
         if (pass_cnt >= 8)
             break;
         if (b.is_pressed()) {
+            sdebug << "B is pressed" << endl;
             if (first_press < 0)
                 first_press = millis();
             else if (millis() - first_press > 1500) {
@@ -178,7 +178,7 @@ void __interactive_test() {
             int       v   = cur_info.sens.read();
             cur_info.min  = math::min_of(v, cur_info.min);
             cur_info.max  = math::max_of(v, cur_info.max);
-            if (cur_info.max - cur_info.min > 120) {
+            if (cur_info.max - cur_info.min > 180) {
                 cur_info.pass = true;
                 pass_cnt++;
                 sout << "Sensor #" << num << " (pin " << pins[i]

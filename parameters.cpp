@@ -45,21 +45,26 @@ int FULL_SPEED = 130;
 /**
  * 设定机器人自动停止时的传感器值，仅对move_until_blocked有效
  */
-int STOP_THRESHOLD = 55;
+int STOP_THRESHOLD = 85;
 
 /**
  * 设置机器人开始减速时的最低传感器值，仅对move_until_blocked有效
  */
-int SLOW_THRESHOLD = 115;
+int SLOW_THRESHOLD = 125;
 
 /**
  * 设置r.calibrate(...)的电机运行速度
  */
-int CALIBRATION_ROTATION_SPEED = 85;
+int CALIBRATION_ROTATION_SPEED = 75;
+
+/**
+ * 设置校准精确度
+ */
+int CALIBRATION_ACCURACY = 3;
 /*
  * Above are all parameters that you can modify if necessary.
  * 以上是您可以按需更改的参数。
- * Please do not modify anything below, unless you are clear what modifications
- * to contents below may cause.
+ * Please do not modify anything below, unless you are clear what
+ * modifications to contents below may cause.
  * 请不要修改任何下方的内容，除非您清楚对下面内容的修改可能导致什么。
  */

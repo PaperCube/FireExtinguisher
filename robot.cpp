@@ -229,6 +229,24 @@ void robot::__test() {
     mot_pair_lr->go();
 }
 
+void robot::__test_power() {
+    buzzer bz;
+    set_max_power(100);
+    int sp = 0;
+    set_direction(0);
+    while (true) {
+        go(sp++);
+        delay(100);
+        if (sp % 10 == 0) {
+            if (sp % 50 == 0) {
+                bz.buzz(buzz_patterns::LONG);
+            } else {
+                bz.buzz(buzz_patterns::SHORT);
+            }
+        }
+    }
+}
+
 void robot::set_sensors(int *arr) { math::copy_arr(arr, arr + 8, SENSOR_PINS); }
 
 void robot::set_sensors(
@@ -243,18 +261,31 @@ void robot::rotate_timed(int s, int t) { motor_group->rotate_timed(s, t); }
 
 void robot::fix(direction_t d) {
     buzzer buz;
+    int    last_dir = 1;
     while (true) {
-        int l = read_sensor(d, -1);
-        int r = read_sensor(d, 1);
-        if (l != r) {
-            int   dir       = l < r ? 1 : -1;
-            int   sub       = math::absolute(l - r);
-            float acc_ratio = 1;
-            if (sub > 30)
-                acc_ratio = 1.2;
-            rotate_at(CALIBRATION_ROTATION_SPEED * dir * acc_ratio);
-            delay(60);
+        int l   = read_sensor(d, -1);
+        int r   = read_sensor(d, 1);
+        int sub = math::absolute(l - r);
+        if (sub <= CALIBRATION_ACCURACY) {
+            if (math::min_of(l, r) > STOP_THRESHOLD) {
+                last_dir = -last_dir;
+                rotate_at(CALIBRATION_ROTATION_SPEED * last_dir);
+                while (math::min_of(read_sensor(d, -1), read_sensor(d, 1)) >
+                       STOP_THRESHOLD) {
+                    // wait
+                }
+                stop();
+                continue;
+            } else
+                break;
         }
+        last_dir        = l > r ? 1 : -1;
+        float acc_ratio = 1;
+        if (sub > 45)
+            acc_ratio = 1.2;
+        rotate_at(CALIBRATION_ROTATION_SPEED * last_dir * acc_ratio);
+        delay(15);
+        stop();
     }
     stop();
     buz.buzz(buzz_patterns::SHORT);

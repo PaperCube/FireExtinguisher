@@ -30,6 +30,7 @@ struct robot {
     void              setup();
     void              run();
     void              __test();
+    void              __test_power();
     void              move_until_blocked(direction_t, int = 0);
 
     /* Begin: delegated by quad_directional *motor_group */

@@ -7,6 +7,7 @@ using namespace serial;
 button::button(int button_pin) {
     pin_id    = 21 + button_pin;
     button_id = button_pin;
+    pinMode(pin_id, INPUT);
 }
 
 bool button::is_pressed() {

@@ -15,5 +15,6 @@ extern int FULL_SPEED;
 extern int STOP_THRESHOLD;
 extern int SLOW_THRESHOLD;
 extern int CALIBRATION_ROTATION_SPEED;
+extern int CALIBRATION_ACCURACY;
 
 #endif
