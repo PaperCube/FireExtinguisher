@@ -106,7 +106,7 @@ void motor_pair::rotate_at(int speed) {
 }
 
 void motor_pair::rotate_timed(int speed, int time) {
-    rotate(speed);
+    rotate_at(speed);
     delay(time);
     stop();
 }

@@ -249,10 +249,10 @@ void robot::fix(direction_t d) {
         if (l != r) {
             int   dir       = l < r ? 1 : -1;
             int   sub       = math::absolute(l - r);
-            float acc_ratio = 1f;
+            float acc_ratio = 1;
             if (sub > 30)
-                acc_ratio = 1.2f;
-            rotate(CALIBRATION_ROTATION_SPEED * dir * acc_ratio);
+                acc_ratio = 1.2;
+            rotate_at(CALIBRATION_ROTATION_SPEED * dir * acc_ratio);
             delay(60);
         }
     }
