@@ -52,6 +52,10 @@ int STOP_THRESHOLD = 55;
  */
 int SLOW_THRESHOLD = 115;
 
+/**
+ * 设置r.calibrate(...)的电机运行速度
+ */
+int CALIBRATION_ROTATION_SPEED = 85;
 /*
  * Above are all parameters that you can modify if necessary.
  * 以上是您可以按需更改的参数。

@@ -100,6 +100,21 @@ void motor_pair::go(int v) {
     right->go(v);
 }
 
+void motor_pair::rotate_at(int speed) {
+    left->go(speed);
+    right->go(-speed);
+}
+
+void motor_pair::rotate_timed(int speed, int time) {
+    rotate(speed);
+    delay(time);
+    stop();
+}
+
+motor_controller *motor_pair::get_first() { return left; }
+
+motor_controller *motor_pair::get_second() { return right; }
+
 /**
  * Fully left: -1.0
  * Straight: 0.0
@@ -173,6 +188,17 @@ void quad_directional::reverse_and_stop(int timeout_millis) {
 void quad_directional::reverse_and_stop(int power, int timeout_millis) {
     go(-math::absolute(power));
     delay(timeout_millis);
+    stop();
+}
+
+void quad_directional::rotate_at(int speed) {
+    pair_lr->rotate_at(speed * multiplier_lr);
+    pair_fb->rotate_at(speed * multiplier_fb);
+}
+
+void quad_directional::rotate_timed(int speed, long time) {
+    rotate_at(speed);
+    delay(time);
     stop();
 }
 

@@ -8,6 +8,7 @@ extern direction reverse_direction(direction_t);
 struct builtin_motor_driver {
   private:
     int digital_l, digital_r, analog_pin;
+
   public:
     bool all_low_stop;
     builtin_motor_driver(int);
@@ -34,9 +35,13 @@ struct motor_controller {
 struct motor_pair {
   public:
     motor_pair(motor_controller *, motor_controller *);
-    void stop();
-    void go(int);
-    void go();
+    void              stop();
+    void              go(int);
+    void              go();
+    void              rotate_at(int);
+    void              rotate_timed(int, int);
+    motor_controller *get_first();
+    motor_controller *get_second();
     // void turn(float);
   private:
     motor_controller *left, *right;
@@ -82,6 +87,8 @@ struct quad_directional {
     void go(int);
     void reverse_and_stop(int);
     void reverse_and_stop(int, int);
+    void rotate_at(int);
+    void rotate_timed(int, long);
 };
 
 struct arm {

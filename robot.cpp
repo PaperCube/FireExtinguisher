@@ -236,3 +236,26 @@ void robot::set_sensors(
     int v[] = {v1, v2, v3, v4, v5, v6, v7, v8};
     set_sensors(v);
 }
+
+void robot::rotate_at(int s) { motor_group->rotate_at(s); }
+
+void robot::rotate_timed(int s, int t) { motor_group->rotate_timed(s, t); }
+
+void robot::fix(direction_t d) {
+    buzzer buz;
+    while (true) {
+        int l = read_sensor(d, -1);
+        int r = read_sensor(d, 1);
+        if (l != r) {
+            int   dir       = l < r ? 1 : -1;
+            int   sub       = math::absolute(l - r);
+            float acc_ratio = 1f;
+            if (sub > 30)
+                acc_ratio = 1.2f;
+            rotate(CALIBRATION_ROTATION_SPEED * dir * acc_ratio);
+            delay(60);
+        }
+    }
+    stop();
+    buz.buzz(buzz_patterns::SHORT);
+}
