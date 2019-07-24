@@ -1,5 +1,5 @@
 # “灭火”Arduino机器人示例与接口解释
-*版本v7.24.0*  
+*版本v7.24.1*  
 
 ## 描述
 本程序库是FIRA灭火机器人筑柏2019款的配套程序库。此机器人使用了多个传感器与运动部件，故引入本库简化机器人的使用
@@ -7,7 +7,7 @@
 --------------------
 
 ## 开始使用本库
-请在[此处](github.com/PaperCube/FireExtinguisher) (`github.com/PaperCube/FireExtinguisher`)下载本类库的所有文件，然后打开Arduino安装目录下的libraries文件夹，将所有文件放置到libraries文件夹中的一个文件夹内。例如，如果你新建一个名为`____FireExtinguisher`的文件夹，则你应该把所有文件放到`{Arduino安装目录}/libraries/____FireExtinguisher`文件夹中，并且如果你打开这个文件夹，你会看到大量的C++头文件和源代码。  
+请在[此处](https://github.com/PaperCube/FireExtinguisher) (`github.com/PaperCube/FireExtinguisher`)下载本类库的所有文件，然后打开Arduino安装目录下的libraries文件夹，将所有文件放置到libraries文件夹中的一个文件夹内。例如，如果你新建一个名为`____FireExtinguisher`的文件夹，则你应该把所有文件放到`{Arduino安装目录}/libraries/____FireExtinguisher`文件夹中，并且如果你打开这个文件夹，你会看到大量的C++头文件和源代码。  
 请在主程序中加入`#include "robot.h"`来使用本类库。
 
 --------------------
