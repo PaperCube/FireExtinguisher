@@ -7,13 +7,7 @@ using serial::endl;
 using serial::sdebug;
 
 builtin_motor_driver::builtin_motor_driver(int port) {
-    if (port <= 0 || port > 6)
-        port = 1;
-    digital_l = 38 + 2 * (6 - port);
-    digital_r = digital_l + 1;
-    pinMode(digital_l, OUTPUT);
-    pinMode(digital_r, OUTPUT);
-    analog_pin   = 8 + (6 - port);
+    set_port(port);
     all_low_stop = true;
 }
 
@@ -27,6 +21,19 @@ void builtin_motor_driver::go(int speed) {
     digitalWrite(digital_l, speed > 0 ? HIGH : LOW);
     digitalWrite(digital_r, speed > 0 ? LOW : HIGH);
     analogWrite(analog_pin, math::absolute(speed));
+}
+
+void builtin_motor_driver::set_port(int p) {
+    if (p <= 0 || p > 6)
+        p = 1;
+    if (port == p)
+        return;
+    port      = p;
+    digital_l = 38 + 2 * (6 - port);
+    digital_r = digital_l + 1;
+    pinMode(digital_l, OUTPUT);
+    pinMode(digital_r, OUTPUT);
+    analog_pin = 8 + (6 - port);
 }
 
 direction reverse_direction(direction_t d) {

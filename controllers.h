@@ -12,6 +12,7 @@ struct builtin_motor_driver {
   public:
     bool all_low_stop;
     builtin_motor_driver(int);
+    void set_port(int);
     void go(int);
 };
 

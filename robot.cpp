@@ -220,7 +220,10 @@ int robot::read_sensor_raw(direction_t d, signed char which) {
     return sensor->get_right()->read_raw_calibrated();
 }
 
-void robot::start_arm() { mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED); }
+void robot::start_arm() {
+    mechanic_arm_motor.set_port(MECHANIC_ARM_MOTOR_ID);
+    mechanic_arm_motor.go(MECHANIC_ARM_ROTATION_SPEED);
+}
 
 void robot::stop_arm() { mechanic_arm_motor.go(0); }
 
