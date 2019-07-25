@@ -258,7 +258,11 @@ void robot::__test_power() {
 }
 
 void robot::__test_print_sensors() {
-    _loop(i, 4) {}
+    _loop(i, 4) {
+        sout << "Direction " << i << " : "
+             << " l" << sensor[i]->get_left()->get_pin() << " r"
+             << sensor[i]->get_right()->get_pin();
+    }
     while (true) {
         _loop(i, 4) {
             sensor_pair *sp = sensor[i];
