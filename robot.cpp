@@ -257,6 +257,17 @@ void robot::__test_power() {
     }
 }
 
+void robot::__test_print_sensors() {
+    while (true) {
+        _loop(i, 4) {
+            sensor_pair *sp = sensors[i];
+            sout << sp->get_left()->read_raw() << ","
+                 << sp->get_right()->read_raw();
+            sout << (i == 3 ? "\n" : ",");
+        }
+    }
+}
+
 void robot::set_sensors(int *arr) { math::copy_arr(arr, arr + 8, SENSOR_PINS); }
 
 void robot::set_sensors(
