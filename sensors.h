@@ -13,6 +13,7 @@ class prox_sensor {
     int read_raw();
     int read_raw_calibrated();
     int read();
+    int get_pin();
 };
 
 class sensor_pair {

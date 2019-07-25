@@ -258,6 +258,7 @@ void robot::__test_power() {
 }
 
 void robot::__test_print_sensors() {
+    _loop(i, 4) {}
     while (true) {
         _loop(i, 4) {
             sensor_pair *sp = sensor[i];

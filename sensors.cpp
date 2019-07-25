@@ -37,6 +37,8 @@ int prox_sensor::read_raw_calibrated() {
     return (int)((double)sum / REPEAT_CNT);
 }
 
+int prox_sensor::get_pin() { return pin; }
+
 prox_sensor::prox_sensor(int pin_id) { pin = pin_id; }
 
 sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
