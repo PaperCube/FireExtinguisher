@@ -30,9 +30,12 @@ struct robot {
     void              reverse_power_ratio(float, float, float, float);
     void              setup();
     void              run();
-    void              __test();
-    void              __test_power();
     void              move_until_blocked(direction_t, int = 0);
+
+    // Testing related
+    void __test();
+    void __test_power();
+    void __test_print_sensors();
 
     /* Begin: delegated by quad_directional *motor_group */
     void stop();
