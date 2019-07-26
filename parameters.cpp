@@ -62,6 +62,11 @@ int CALIBRATION_ROTATION_SPEED = 75;
  */
 int CALIBRATION_ACCURACY = 3;
 
+/**
+ * 设定机器人如何解读两个传感器的值
+ * 1：平均值。
+ * 2：最小值。
+ */
 int SENSOR_COORDINATION_TYPE = 1;
 /*
  * Above are all parameters that you can modify if necessary.

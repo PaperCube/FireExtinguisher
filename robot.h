@@ -59,6 +59,8 @@ struct robot {
     void rotate_at(int);
     void rotate_timed(int, int);
     void fix(direction_t);
+
+    void set_coordination_function(BiIntFunction);
 };
 
 #endif
