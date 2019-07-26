@@ -17,4 +17,8 @@ extern int SLOW_THRESHOLD;
 extern int CALIBRATION_ROTATION_SPEED;
 extern int CALIBRATION_ACCURACY;
 
+extern bool GO_RIGHT_FIRST;
+extern bool GO_FORWARD_FIRST;
+extern bool GO_LEFT_RIGHT_FIRST;
+
 #endif

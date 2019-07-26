@@ -61,6 +61,10 @@ int CALIBRATION_ROTATION_SPEED = 75;
  * 设置校准精确度
  */
 int CALIBRATION_ACCURACY = 3;
+
+bool GO_RIGHT_FIRST      = true;
+bool GO_FORWARD_FIRST    = true;
+bool GO_LEFT_RIGHT_FIRST = true;
 /*
  * Above are all parameters that you can modify if necessary.
  * 以上是您可以按需更改的参数。

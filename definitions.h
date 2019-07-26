@@ -9,4 +9,8 @@
 enum direction { FORWARD, LEFTWARD, BACKWARD, RIGHTWARD };
 typedef int direction_t;
 
+direction left_of(direction_t);
+direction right_of(direction_t);
+direction opposite(direction_t);
+
 #endif

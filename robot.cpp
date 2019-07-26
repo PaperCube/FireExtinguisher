@@ -167,30 +167,6 @@ void debug_prox_sensor() {
     }
 }
 
-void robot::run() {
-    if (!is_setup)
-        return;
-    button btn(2);
-    while (true) {
-        btn.wait_until_released();
-        move_until_blocked(direction::FORWARD);
-    }
-    debug_prox_sensor();
-    motor_group->go();
-    const direction directions[] = {direction::FORWARD, direction::RIGHTWARD,
-                                    direction::BACKWARD, direction::LEFTWARD};
-    while (true) {
-        for (auto d : directions) {
-            sdebug << "Travelling to direction " << (int)d << endl;
-            motor_group->set_direction(d);
-            delay(1000);
-            motor_group->stop();
-            delay(200);
-        }
-    }
-    delay(100000);
-}
-
 void robot::stop() { motor_group->stop(); }
 
 void robot::set_direction(direction_t d) { motor_group->set_direction(d); }
@@ -203,6 +179,20 @@ void robot::reverse_and_stop(int v) { motor_group->reverse_and_stop(v); }
 
 void robot::reverse_and_stop(int v, int v2) {
     motor_group->reverse_and_stop(v, v2);
+}
+
+void robot::go_smartly() {
+    bool going_lr = GO_LEFT_RIGHT_FIRST;
+    while (true) {
+        direction d;
+        if (going_lr) {
+            d = GO_RIGHT_FIRST ? direction::RIGHTWARD : direction::LEFTWARD;
+        } else {
+            d = GO_FORWARD_FIRST ? direction::FORWARD : direction::BACKWARD;
+        }
+        move_until_blocked(d);
+        going_lr = !going_lr;
+    }
 }
 
 int robot::read_sensor(direction_t d) {

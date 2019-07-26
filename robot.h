@@ -28,7 +28,6 @@ struct robot {
     void              set_max_power(int, int, int, int);
     void              reverse_power_ratio(float, float, float, float);
     void              setup();
-    void              run();
     void              move_until_blocked(direction_t, int = 0);
 
     // Testing related
@@ -44,6 +43,8 @@ struct robot {
     void reverse_and_stop(int);
     void reverse_and_stop(int, int);
     /* End: delegate */
+
+    void go_smartly();
 
     int read_sensor(direction_t);
     int read_sensor(direction_t, signed char);
