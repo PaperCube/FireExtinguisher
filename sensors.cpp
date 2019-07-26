@@ -29,12 +29,16 @@ int prox_sensor::read_raw() {
 int prox_sensor::read() { return convert(read_raw_calibrated()); }
 
 int prox_sensor::read_raw_calibrated() {
-    const int REPEAT_CNT = 120;
-    long long sum        = 0;
-    for (int i = 0; i < REPEAT_CNT; i++) {
-        sum += read_raw();
+    for (int i = 0; i < FILTER_BUFFER_SIZE; i++) {
+        buf[i] = read_raw();
     }
-    return (int)((double)sum / REPEAT_CNT);
+    alg::merge_sort(buf, buf + FILTER_BUFFER_SIZE, sort_buf);
+    const int l = 8, r = 24;
+    long      sum = 0;
+    for (int i = l; i < r; i++) {
+        sum += buf[i];
+    }
+    return sum / (r - l);
 }
 
 int prox_sensor::get_pin() { return pin; }

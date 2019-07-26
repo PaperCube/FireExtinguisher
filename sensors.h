@@ -5,8 +5,12 @@
 
 class prox_sensor {
   private:
+    static const int FILTER_BUFFER_SIZE = 32;
+
     int pin;
     int convert(int);
+    int buf[FILTER_BUFFER_SIZE];
+    int sort_buf[FILTER_BUFFER_SIZE];
 
   public:
     prox_sensor(int);

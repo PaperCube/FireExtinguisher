@@ -1,5 +1,11 @@
 #include "math_util.h"
 
+namespace alg {
+template void merge_sort(int *, int *, int *);
+template void merge(int *, int *, int *, int *);
+template int *extract_new(int *, int *, int *);
+} // namespace alg
+
 namespace math {
 
 averager::averager() {
