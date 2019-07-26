@@ -3,6 +3,63 @@
 
 #define _loop(v, a) for (int(v) = 0; (v) < (a); (v)++)
 
+template <class T, class SumType, int L> class cyclic_queue {
+    T   values[L];
+    int front;
+    int rear;
+    int len;
+
+    constexpr static int max_size = L;
+
+    SumType sum;
+
+  private:
+    void normalize() {
+        if (front > L) {
+            front %= L;
+            rear = front + len;
+        }
+    }
+
+    T &get_internal(int index) { return values[index % L]; }
+
+  public:
+    cyclic_queue() {
+        front = 0;
+        rear  = 0;
+    }
+    int  size() { return len; }
+    void push_back(T v) {
+        if (len >= L) {
+            pop_front();
+        }
+        get_internal(rear++) = v;
+        len++;
+        sum += v;
+        normalize();
+    }
+    T &  operator[](int v) { return get_internal(front + v); }
+    void pop_front() {
+        if (len > 0) {
+            len--;
+            sum -= get_internal(front++);
+        }
+    }
+    void pop_back() {
+        if (len > 0) {
+            len--;
+            sum -= get_internal(rear--);
+        }
+    }
+    void clear() {
+        front = rear = 0;
+        len = sum = 0;
+    }
+    SumType get_sum() { return sum; }
+};
+
+extern template class cyclic_queue<int, long, 30>;
+
 namespace math {
 
 template <class T> T absolute(T value) {

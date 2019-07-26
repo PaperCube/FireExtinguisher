@@ -1,5 +1,7 @@
 #include "math_util.h"
 
+template class cyclic_queue<int, long, 30>;
+
 namespace math {
 
 averager::averager() {
