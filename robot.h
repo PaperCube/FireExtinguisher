@@ -60,6 +60,10 @@ struct robot {
     void rotate_at(int);
     void rotate_timed(int, int);
     void fix(direction_t);
+    void fix_old(direction_t);
+
+    void drive(direction_t, int);
+    void drive(direction_t, direction_t, int);
 };
 
 #endif

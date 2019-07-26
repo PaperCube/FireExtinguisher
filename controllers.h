@@ -92,6 +92,8 @@ struct quad_directional {
     void reverse_and_stop(int, int);
     void rotate_at(int);
     void rotate_timed(int, long);
+    void drive(direction_t, int);
+    void drive(direction_t, direction_t, int);
 };
 
 struct arm {

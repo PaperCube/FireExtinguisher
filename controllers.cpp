@@ -213,6 +213,22 @@ void quad_directional::rotate_timed(int speed, long time) {
     stop();
 }
 
+void quad_directional::drive(direction_t which, int speed) {
+    motor_controller *const motors[] = {
+        pair_fb->get_first(), pair_lr->get_first(), pair_fb->get_second(),
+        pair_lr->get_second()};
+    double multip[] = {multiplier_fb, multiplier_lr, multiplier_fb,
+                       multiplier_lr};
+    motors[which]->go(speed * multip[which]);
+}
+
+void quad_directional::drive(direction_t which, direction_t d, int speed) {
+    if ((which & 1) != (d & 1)) {
+        int switches[] = {1, -1, 1, -1};
+        drive(which, switches[d] * math::absolute(speed));
+    }
+}
+
 arm::arm(int pin_id) : pin(pin_id) { current_angle = 0; }
 
 void arm::rotate_to(int angle) {

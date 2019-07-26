@@ -273,10 +273,14 @@ void robot::set_sensors(
 }
 
 void robot::rotate_at(int s) { motor_group->rotate_at(s); }
-
 void robot::rotate_timed(int s, int t) { motor_group->rotate_timed(s, t); }
 
-void robot::fix(direction_t d) {
+void robot::drive(direction_t which, int s) { motor_group->drive(which, s); }
+void robot::drive(direction_t which, direction_t d, int s) {
+    motor_group->drive(which, d, s);
+}
+
+void robot::fix_old(direction_t d) {
     buzzer buz;
     int    last_dir = 1;
     while (true) {
@@ -301,6 +305,24 @@ void robot::fix(direction_t d) {
         if (sub > 45)
             acc_ratio = 1.2;
         rotate_at(CALIBRATION_ROTATION_SPEED * last_dir * acc_ratio);
+        delay(15);
+        stop();
+    }
+    stop();
+    buz.buzz(buzz_patterns::SHORT);
+}
+
+void robot::fix(direction_t d) {
+    buzzer buz;
+    while (true) {
+        int l   = read_sensor(d, -1);
+        int r   = read_sensor(d, 1);
+        int sub = math::absolute(l - r);
+        if (sub <= CALIBRATION_ACCURACY) {
+            break;
+        }
+        int wheel_id = l > r ? left_of(d) : right_of(d);
+        drive(wheel_id, d, CALIBRATION_ROTATION_SPEED);
         delay(15);
         stop();
     }
