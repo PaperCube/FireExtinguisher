@@ -65,6 +65,12 @@ int CALIBRATION_ACCURACY = 3;
 bool GO_RIGHT_FIRST      = true;
 bool GO_FORWARD_FIRST    = true;
 bool GO_LEFT_RIGHT_FIRST = true;
+/**
+ * 设定机器人如何解读两个传感器的值
+ * 1：平均值。
+ * 2：最小值。
+ */
+int SENSOR_COORDINATION_TYPE = 1;
 /*
  * Above are all parameters that you can modify if necessary.
  * 以上是您可以按需更改的参数。

@@ -64,6 +64,8 @@ struct robot {
 
     void drive(direction_t, int);
     void drive(direction_t, direction_t, int);
+
+    void set_coordination_function(BiIntFunction);
 };
 
 #endif

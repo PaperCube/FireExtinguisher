@@ -11,6 +11,11 @@ using namespace serial;
 
 const int NATURAL_CONSTANT = 2.71828;
 
+BiIntFunction sensor_coordinations[2];
+
+int by_average(int a, int b) { return a + (b - a) / 2; }
+int by_min(int a, int b) { return math::min_of(a, b); }
+
 int prox_sensor::convert(int value) {
     if (value == 0)
         value = 1;
@@ -53,13 +58,13 @@ sensor_pair::sensor_pair(prox_sensor *sl, prox_sensor *sr) {
 int sensor_pair::read() {
     long vl = read_l();
     long vr = read_r();
-    return (vl + vr) / 2;
+    return sensor_coordinations[SENSOR_COORDINATION_TYPE](vl, vr);
 }
 
 int sensor_pair::read_raw() {
     long vl = get_left()->read_raw_calibrated();
     long vr = get_right()->read_raw_calibrated();
-    return (vl + vr) / 2;
+    return sensor_coordinations[SENSOR_COORDINATION_TYPE](vl, vr);
 }
 
 int sensor_pair::read_l() { return l->read(); }
@@ -91,6 +96,14 @@ void sensor_manager::prepare() {
                         SENSOR_PINS[sensor_ordinals[i * 2 + 1] - 1]);
         sensors[i] = new sensor_pair(l, r);
     }
+
+    sensor_coordinations[1] = by_average;
+    sensor_coordinations[2] = by_min;
+}
+
+void sensor_manager::set_coordination_function(BiIntFunction f) {
+    sensor_coordinations[0]  = f;
+    SENSOR_COORDINATION_TYPE = 0;
 }
 
 /*

@@ -2,6 +2,11 @@
 #define SENSORS_H
 
 #include "definitions.h"
+#include "parameters.h"
+
+typedef int (*BiIntFunction)(int, int);
+
+extern BiIntFunction sensor_coordinations[2];
 
 class prox_sensor {
   private:
@@ -47,6 +52,7 @@ class sensor_manager {
     sensor_manager();
     sensor_type *sensor_at(direction_t);
     void         prepare();
+    void         set_coordination_function(BiIntFunction);
 };
 
 namespace sensor_debugging {

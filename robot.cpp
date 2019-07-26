@@ -329,3 +329,7 @@ void robot::fix(direction_t d) {
     stop();
     buz.buzz(buzz_patterns::SHORT);
 }
+
+void robot::set_coordination_function(BiIntFunction f) {
+    sensor_manager::instance.set_coordination_function(f);
+}

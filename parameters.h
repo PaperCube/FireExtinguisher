@@ -20,5 +20,6 @@ extern int CALIBRATION_ACCURACY;
 extern bool GO_RIGHT_FIRST;
 extern bool GO_FORWARD_FIRST;
 extern bool GO_LEFT_RIGHT_FIRST;
+extern int  SENSOR_COORDINATION_TYPE;
 
 #endif
