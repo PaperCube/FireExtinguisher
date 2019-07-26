@@ -61,6 +61,8 @@ int CALIBRATION_ROTATION_SPEED = 75;
  * 设置校准精确度
  */
 int CALIBRATION_ACCURACY = 3;
+
+int SENSOR_COORDINATION_TYPE = 1;
 /*
  * Above are all parameters that you can modify if necessary.
  * 以上是您可以按需更改的参数。
