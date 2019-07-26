@@ -225,7 +225,7 @@ void quad_directional::drive(direction_t which, int speed) {
 void quad_directional::drive(direction_t which, direction_t d, int speed) {
     if ((which & 1) != (d & 1)) {
         int switches[] = {1, -1, 1, -1};
-        drive(which, switches[d] * math::absolute(speed));
+        drive(which, switches[d] * speed);
     }
 }
 
