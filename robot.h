@@ -11,7 +11,6 @@ struct robot {
 
     motor_controller *   motor_l, *motor_r, *motor_f, *motor_b;
     motor_pair *         mot_pair_lr, *mot_pair_fb;
-    sensor_pair *        sensor[4];
     builtin_motor_driver mechanic_arm_motor;
 
     void init_sensors();

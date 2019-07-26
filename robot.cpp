@@ -259,13 +259,14 @@ void robot::__test_power() {
 
 void robot::__test_print_sensors() {
     _loop(i, 4) {
+        sensor_pair *sp = sensor_manager::instance.sensors[i];
         sout << "Direction " << i << " : "
-             << " l" << sensor[i]->get_left()->get_pin() << " r"
-             << sensor[i]->get_right()->get_pin();
+             << " l" << sp->get_left()->get_pin() << " r"
+             << sp->get_right()->get_pin() << endl;
     }
     while (true) {
         _loop(i, 4) {
-            sensor_pair *sp = sensor[i];
+            sensor_pair *sp = sensor_manager::instance.sensors[i];
             sout << sp->get_left()->read_raw() << ","
                  << sp->get_right()->read_raw();
             sout << (i == 3 ? "\n" : ",");
